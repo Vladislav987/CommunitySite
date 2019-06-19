@@ -1,0 +1,65 @@
+<aura:component description="productItem" controller="OrderController">
+    <aura:attribute name="item" type="Product2" required="true"/>
+    <aura:registerEvent name="addToCard" type="c:addToCardEvent"/>
+
+    <lightning:card>
+        <aura:set attribute="title">
+            <lightning:formattedText value="{!v.item.Brand__c}"/>
+        </aura:set>
+        <p class="slds-text-align--center slds-text-heading_medium" style="font-weight: bolder">
+            <lightning:formattedText value="{!v.item.Name}"/>
+        </p>
+
+
+        <p style="width: 300px; display: block; margin: 0 auto">
+            <ui:outputRichText value="{!v.item.Image__c}"/>
+
+        </p>
+
+        <lightning:layout multipleRows="true" horizontalAlign="spread">
+            <lightning:layoutItem padding="around-medium">
+                <div class="slds-text-heading_medium" style="font-weight: bolder">
+                    <p>
+                        <lightning:formattedText value="{!'Price: '+v.item.Price__c + ' $'}"/>
+
+                    </p>
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-medium">
+                <div class="slds-text-heading--medium" style="font-weight: bolder">
+                    <p>
+                        <lightning:formattedText value="{!'Quantity: '+v.item.Quantity__c }"/>
+
+                    </p>
+                </div>
+
+            </lightning:layoutItem>
+        </lightning:layout>
+        <p class="slds-p-around--small slds-align_absolute-center">
+            <c:modalWindow product="{!v.item}" />
+
+<!--
+                           brand="{!v.item.Brand__c}"
+                      name="{!v.item.Name}"
+                      price="{!v.item.Price__c}"
+                      description="{!v.item.Description}"/>
+-->
+        </p>
+        <p class="slds-text-align_center">
+            <lightning:layout multipleRows="true">
+                <lightning:layoutItem size="6" padding="horizontal-large">
+                    <lightning:button variant="destructive" label="Buy" onclick="{!c.addToCard}"/>
+
+                </lightning:layoutItem>
+                <lightning:layoutItem size="4" padding="horizontal-small">
+                    <lightning:input aura:id="inputNumber" type="number" value="1"
+                                     name="amount" label="label" variant="label-hidden" min="1" max="9999"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+        </p>
+
+
+    </lightning:card>
+
+</aura:component>

@@ -1,0 +1,11 @@
+<aura:component description="productContainer2">
+    <Div>
+        <c:productBrandMenu />
+    </Div>
+<br />
+    <Div>
+        <c:productContainer />
+    </Div>
+
+
+</aura:component>

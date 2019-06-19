@@ -1,0 +1,7 @@
+<aura:component description="DeleteAllOrders" implements="flexipage:availableForAllPageTypes" controller="FlexipageDeleteOrdersController">
+
+<lightning:button class="slds-button slds-button_destructive"
+                  label="DeleteAllOrders"
+                  onclick="{!c.deleteAll}"/>
+
+</aura:component>

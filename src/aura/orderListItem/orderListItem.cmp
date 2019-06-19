@@ -1,0 +1,41 @@
+<aura:component description="orderListItem" controller="OrderController">
+    <aura:attribute name="orderLineItems" type="Order_Product_Lines__c[]"/>
+    <aura:attribute name="totalPrice" type="Integer"/>
+
+    <aura:handler name="deleteFromOrder" event="c:deleteFromOrderEvent" action="{!c.handleDeleteFromOrder}"/>
+    <aura:handler name="updateItemQuantity" event="c:updateItemQuantityEvent" action="{!c.recalculateTotalPrice}"/>
+    <aura:handler name="change" value="{!v.orderLineItems}" action="{!c.recalculateTotalPrice}"/>
+
+    <aura:if isTrue="{!v.orderLineItems.length}">
+            <lightning:icon iconName="standard:quotes" size="large" class="slds-align_absolute-center" />
+        <lightning:layout multipleRows="true">
+            <aura:iteration items="{!v.orderLineItems}" var="order" indexVar="indexVar">
+                <lightning:layoutItem flexibility="auto" padding="around-small">
+                    <c:orderItem item="{!order}"
+                                 index="{!indexVar}"/>
+                </lightning:layoutItem>
+            </aura:iteration>
+
+            <lightning:layoutItem size="12" flexibility="auto" padding="around-small">
+                <div class="slds-float--right slds-border--top slds-text-heading--medium slds-text-color_destructive">
+                    <lightning:formattedText value="Total Price: "/>
+                    <lightning:formattedNumber value="{!v.totalPrice}" style="currency" currencyCode="USD"/>
+                </div>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem flexibility="shrink" padding="around-small">
+                <lightning:button value="Buy" iconName="action:approval" label="ORDER NOW" onclick="{!c.saveOrder}"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem flexibility="auto" padding="around-small">
+                <lightning:button value="Clear" label="Clear the Basket" variant="destructive"
+                                  onclick="{!c.clearCard}"/>
+            </lightning:layoutItem>
+
+
+        </lightning:layout>
+
+    </aura:if>
+
+
+</aura:component>

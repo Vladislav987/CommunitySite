@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="deleteFromOrderEvent">
+    <aura:attribute name="index" type="String"/>
+</aura:event>

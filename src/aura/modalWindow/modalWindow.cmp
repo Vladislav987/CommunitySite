@@ -1,0 +1,104 @@
+<aura:component description="modalWindow">
+    <aura:attribute name="isOpen" type="Boolean" default="false"/>
+    <aura:attribute name="product" type="Product2"/>
+
+    <!--
+        <aura:attribute name="brand" type="String"/>
+        <aura:attribute name="name" type="String"/>
+        <aura:attribute name="price" type="Decimal"/>
+        <aura:attribute name="description" type="String"/>
+    -->
+
+    <lightning:button label="Product info" variant="brand" iconName="action:info" onclick="{!c.openWindow}"/>
+    <aura:if isTrue="{!v.isOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon alternativeText="close" iconName="utility:close" onclick="{!c.closeWindow}"
+                                          variant="bare-inverse" class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate ">
+                        <span style="color: black">{!v.product.Name}</span>
+                    </h2>
+                    <p class="slds-m-top_x-small">
+                    <div class="slds-media__body">
+                        <h3 class="slds-tile__title slds-truncate slds-border--bottom" title="SPECIFICATIONS"
+                            style="color: darkorange">SPECIFICATIONS</h3>
+                        <div class="slds-tile__detail">
+                            <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Label">
+                                    Brand:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for first label">{!v.product.Brand__c}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Second Label">Sim
+                                    Card Type:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for second label">{!v.product.Sim_Card_Type__c}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Third Label">
+                                    Camera:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for first label">{!v.product.Camera__c}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Fourth Label">
+                                    Storage:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for second label">{!v.product.Storage__c}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Fifth Label">
+                                    Ram:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for first label">{!v.product.Ram__c}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Sixth Label">
+                                    Battery Capacity:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for second label">{!v.product.Battery_Capacity__c}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Seventh Label">
+                                    Screen Size:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for first label">{!v.product.Screen_Size__c}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Eighth Label">
+                                    Weight:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for second label">{!v.product.Weight__c}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Ninth Label">
+                                    Dimensions:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for second label">{!v.product.Dimensions__c}</dd>
+
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Tenth Label">OS
+                                    Version:
+                                </dt>
+                                <dd class="slds-item_detail slds-truncate"
+                                    title="Description for second label">{!v.product.OS_Version__c}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    </p>
+                </header>
+                <div class="slds-modal__content slds-p-around--xx-large" id="modal-content-id-1">
+                    <p>{!v.product.Description}</p>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral" label="Close" title="Close" onclick="{!c.closeWindow}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+</aura:component>

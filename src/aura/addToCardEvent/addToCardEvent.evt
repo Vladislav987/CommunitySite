@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="addToCardEvent">
+    <aura:attribute name="orderItem" type="Order_Product_Lines__c"/>
+</aura:event>

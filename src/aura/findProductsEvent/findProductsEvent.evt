@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="findProductsEvent">
+    <aura:attribute name="findProduct" type="Product2[]"/>
+</aura:event>

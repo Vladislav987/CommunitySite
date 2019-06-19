@@ -1,0 +1,22 @@
+<aura:component controller="ProductController" description="searchBar"
+                implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="searchString" type="String" default=""/>
+    <aura:registerEvent name="findProducts" type="c:findProductsEvent"/>
+
+    <div style="font-size: 111px; background-color: #d8edff">
+        <span class="slds-align_absolute-center">Welcome to "ALI-UA"</span>
+    </div>
+    <div class="slds-form-element slds-lookup  slds-large slds-align_absolute-center" data-select="single">
+        <div class="slds-form-element__control">
+            <div class="slds-align_absolute-center slds-size--large slds-text-heading_medium ">
+                <span>You can find your model!</span>
+            </div>
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+                <lightning:buttonIcon iconName="utility:search" variant="bare" onclick="{! c.findProduct }"
+                                      alternativeText="Search" class="slds-input__icon"/>
+                <ui:inputText value="{!v.searchString}" class="slds-lookup__search-input slds-input"
+                              placeholder="Search"/>
+            </div>
+        </div>
+    </div>
+</aura:component>

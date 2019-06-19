@@ -1,0 +1,15 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global">
+    <lightning:layout>
+        <lightning:layoutItem size="9" class="left-align">
+
+            <c:productList/>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem size="2" class="right-align">
+            <p>КОРЗИНА!!!!</p>
+<!--
+            <p><c:orderListItem/></p>
+-->
+        </lightning:layoutItem>
+    </lightning:layout>
+</aura:component>

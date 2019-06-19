@@ -1,0 +1,13 @@
+<aura:component  implements="forceCommunity:availableForAllPageTypes" access="global">
+ <!--  <aura:attribute name="productList" type="Product2[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:iteration items="{!v.productList}" var="iterList">
+
+
+        <p>{!iterList.Name} = {!iterList.Price__c}</p>
+
+
+        <p><c:productItem productItem="{!iterList}" /></p>
+
+    </aura:iteration>-->
+</aura:component>

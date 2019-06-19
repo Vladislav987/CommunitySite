@@ -1,0 +1,17 @@
+<aura:component description="productContainer" controller="ProductBrandController">
+    <aura:attribute name="productList" type="Product2[]"/>
+    <aura:attribute name="brandList" type="List"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="c:selectBrandappEvent" action="{!c.handleBrandAppEvent}" />
+
+    <Div>
+        <lightning:layout multipleRows="true">
+            <aura:iteration items="{!v.productList}" var="iterList">
+                <lightning:layoutItem size="4" flexibility="auto" padding="around-small">
+                    <p>{!iterList.Brand__c}</p>
+                </lightning:layoutItem>
+            </aura:iteration>
+        </lightning:layout>
+    </Div>
+
+</aura:component>

@@ -1,0 +1,30 @@
+<aura:component controller="ProductController" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="productList" type="Product2[]"/>
+    <aura:attribute name="orders" type="Order_Product_Lines__c[]"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="addToCard" event="c:addToCardEvent" action="{!c.handleAddToCard}"/>
+    <aura:handler event="c:selectBrandappEvent" action="{!c.handleBrandAppEvent}" />
+    <aura:handler   event="c:findProductsEvent" action="{!c.handleFindProducts}" />
+
+
+    <lightning:layout>
+        <lightning:layoutItem size="9" class="left-align">
+            <lightning:layout multipleRows="true">
+
+                <aura:iteration items="{!v.productList}" var="iterList">
+                    <lightning:layoutItem size="4" flexibility="auto" padding="around-small">
+                        <c:productItem item="{!iterList}"/>
+                    </lightning:layoutItem>
+                </aura:iteration>
+
+            </lightning:layout>
+        </lightning:layoutItem>
+
+        <lightning:layoutItem size="3" class="right-align">
+            <c:orderListItem orderLineItems="{!v.orders}"/>
+        </lightning:layoutItem>
+    </lightning:layout>
+
+
+</aura:component>

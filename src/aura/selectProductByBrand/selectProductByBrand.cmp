@@ -1,0 +1,23 @@
+<aura:component description="selectProductByBrand" controller="ProductController"
+                implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="productList" type="Product2[]"/>
+    <aura:attribute name="brandList" type="List"/>
+    <aura:attribute name="filteredList" type="Product2[]" />
+    <aura:registerEvent name="myAppEvent" type="c:selectBrandappEvent" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <Div>
+    <lightning:layout horizontalAlign="center">
+        <aura:iteration items="{!v.brandList}" var="iterList">
+            <lightning:layoutItem >
+                <lightning:button label="{!iterList}"
+                                    onclick="{!c.click}"/>
+            </lightning:layoutItem>
+        </aura:iteration>
+        <lightning:layoutItem >
+            <lightning:button label="Select All"
+                              onclick="{!c.click}"/>
+        </lightning:layoutItem>
+    </lightning:layout>
+    </Div>
+
+</aura:component>
