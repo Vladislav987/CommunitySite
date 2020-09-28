@@ -25,6 +25,7 @@ public without sharing class LW_SalaryComponentController {
         }
     }
 
+
     public static DataWrapper getSalaryForContractorOrHourlyRate(Id recordId) {
         String objectName = recordId.getSObjectType().getDescribe().getName();
         DataWrapper dataWrapper;

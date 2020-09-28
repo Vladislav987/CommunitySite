@@ -5,7 +5,6 @@ private class LW_SalaryComponentControllerTest {
     private static final Id ALLOCATION_RECORD_TYPE_PROJECT_ID =
             Schema.Allocation__c.SObjectType.getDescribe().getRecordTypeInfosByDeveloperName().get('Project').getRecordTypeId();
     private static Id PERSON_ACCOUNT_RT_ID = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('PersonAccount').getRecordTypeId();
-
     public static final String TEST_WORD = 'testHier';
     public static final String TEST_PM_WORD = 'testPM';
     public static final String TEST_PM_MANAGER_WORD = 'manager';
