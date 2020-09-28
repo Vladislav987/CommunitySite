@@ -1,7 +1,3 @@
-/**
- * Created by Ponomarov Vladyslav on 06.06.2019.
- */
-
 public with sharing class Selector {
     public static Card__c getCard(Card__c card){
         return [SELECT Id,
