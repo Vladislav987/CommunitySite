@@ -1,0 +1,9 @@
+<!--
+ - Created by Ponomarov Vladyslav on 07.06.2019.
+ -->
+
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId">
+    <lightning:recordForm objectApiName="Card__c"
+                              layoutType="Full"
+                              fields="{!v.fields}"/>
+</aura:component>

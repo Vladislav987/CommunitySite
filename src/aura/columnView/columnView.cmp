@@ -1,0 +1,28 @@
+<!--
+ - Created by Ponomarov Vladyslav on 04.06.2019.
+ -->
+
+<aura:component description="columnView" controller="ColumnController">
+    <aura:attribute name="cards" type="Card__c[]"/>
+    <aura:attribute name="columns" type="Column__c[]"/>
+<!--
+    <aura:attribute name="showModalWindow" type="Boolean" default="false"/>
+-->
+
+
+
+    <div class="slds-grid slds-wrap slds-color__background_gray-11" >
+                <aura:iteration items="{!v.cards}" var="card">
+                    <div class="slds-col slds-size_1-of-1  slds-p-around_xx-small  ">
+                            <c:card card="{!card}"  columns="{!v.columns}"/>
+                    </div>
+                </aura:iteration>
+
+    </div>
+    <div class="slds-align--absolute-center">
+        <c:cardCreateModalWindow />
+    </div>
+
+
+
+</aura:component>

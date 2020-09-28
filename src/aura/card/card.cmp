@@ -1,0 +1,57 @@
+<!--
+ - Created by Ponomarov Vladyslav on 04.06.2019.
+ -->
+
+<aura:component description="card" controller="CardController">
+    <aura:attribute name="card" type="Card__c"/>
+    <aura:attribute name="columns" type="Column__c[]"/>
+
+
+    <aura:registerEvent name="deleteCard" type="c:deleteCardEvent"/>
+
+    <lightning:card class="slds-box">
+        <lightning:layout>
+            <lightning:layoutItem size="2">
+                <lightning:icon  iconName="custom:custom105" size="small"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="8">
+                <span class="slds-col--padded slds-align--absolute-center">{!v.card.Name}
+                    </span>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2">
+                <lightning:buttonMenu aura:id="menu" iconName="utility:settings" alternativeText="Show menu" onselect="{! c.handleSelect }" class="slds-p-bottom_small" >
+                    <lightning:menuItem label="Delete card" value="1" />
+                    <lightning:menuItem label="Change column" value="2" />
+
+                </lightning:buttonMenu>
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <dl class="slds-box slds-box_x-small ">
+            <dt class="slds-text-align_center ">Description:</dt>
+            <dd>{!v.card.Description__c}</dd>
+        </dl>
+        <dl  class="slds-box slds-box_x-small">
+            <dt class="slds-text-align_center ">Comments:</dt>
+            <dd>{!v.card.Comments__c}</dd>
+        </dl>
+        <dl  class="slds-box slds-box_x-small">
+            <dt class="slds-text-align_center ">Date to close:</dt>
+            <dd>{!v.card.Date_to_close__c}</dd>
+        </dl>
+        <dl  class="slds-box slds-box_x-small">
+            <dt class="slds-text-align_center ">Card owner:</dt>
+            <dd>{!v.card.Card_owner__r.Name}</dd>
+        </dl>
+        <lightning:buttonMenu aura:id="menu1" label="Change column" alternativeText="Show menu" onselect="{! c.handleChangeColumn }" class="slds-p-bottom_small" >
+            <aura:iteration  items="{!v.columns}" var="column">
+                <lightning:menuItem label="{!column.Name}" value="{!column.Id}" />
+            </aura:iteration>
+        </lightning:buttonMenu>
+        <p class="slds-p-around--small">
+            <c:cardModalWindow card="{!v.card}" />
+        </p>
+
+
+    </lightning:card>
+</aura:component>

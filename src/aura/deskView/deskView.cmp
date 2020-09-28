@@ -1,0 +1,20 @@
+<!--
+ - Created by Ponomarov Vladyslav on 05.06.2019.
+ -->
+
+<aura:component description="deskView" controller="ColumnController">
+    <aura:attribute name="columns" type="Column__c[]" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="deleteCard" event="c:deleteCardEvent" action="{!c.doInit}"/>
+
+        <lightning:layout verticalAlign="start" class="x-large btm-brdr" multipleRows="false" >
+            <aura:iteration items="{!v.columns}" var="column">
+                <lightning:layoutItem size="3" padding="horizontal-small">
+                    <h1 class="slds-page-header slds-page-header__title slds-text-align_center">{!column.Name} </h1>
+                    <c:columnView cards="{!column.Cards__r}" columns="{!v.columns}"/>
+                </lightning:layoutItem>
+            </aura:iteration>
+        </lightning:layout>
+
+</aura:component>

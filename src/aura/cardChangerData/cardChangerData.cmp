@@ -1,0 +1,18 @@
+<!--
+ - Created by Ponomarov Vladyslav on 06.06.2019.
+ -->
+
+<aura:component description="recordFormTest" implements="flexipage:availableForRecordHome,flexipage:availableForAllPageTypes,force:hasRecordId">
+        <aura:attribute name="fields" type="String[]" default="['Name','Comments__c','Description__c','Card_owner__c','Date_to_close__c','Column__c']" />
+        <aura:attribute name="card" type="Card__c"/>
+    <lightning:card iconName="custom:custom19" class="slds-card__body slds-card__body_inner" title="{!'Change data' + v.cardId}">
+        <lightning:recordForm
+                    recordId="{!v.card.Id}"
+                    objectApiName="Card__c"
+                    fields="{!v.fields}"
+                    columns="1"
+                    mode="edit"
+
+        />
+    </lightning:card>
+</aura:component>

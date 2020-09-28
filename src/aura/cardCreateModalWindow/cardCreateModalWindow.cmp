@@ -1,0 +1,20 @@
+<!--
+ - Created by Ponomarov Vladyslav on 07.06.2019.
+ -->
+
+<aura:component description="cardCreateModalWindow">
+    <aura:attribute name="isOpen" type="Boolean" default="false"/>
+
+    <aura:registerEvent name="deleteCard" type="c:deleteCardEvent"/>
+
+    <lightning:button label="Create new Card"  iconName="utility:download" iconPosition="left" variant="brand"  onclick="{!c.openWindow}"/>
+    <aura:if isTrue="{!v.isOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-color__background_gray-4">
+            <div class="slds-modal__container ">
+                <c:cardCreator />
+                <lightning:button variant="neutral" label="Close" title="Close" onclick="{!c.closeWindow}"/>
+            </div>
+        </section>
+    </aura:if>
+
+</aura:component>

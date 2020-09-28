@@ -1,0 +1,102 @@
+<!--
+ - Created by Ponomarov Vladyslav on 06.08.2019.
+ -->
+
+<messaging:emailTemplate subject="PR PT Contract Approval Notification ({!RelatedTo.Name})" recipientType="User"
+                         relatedToType="EUR_CRM_Contract__c">
+    <messaging:HtmlEmailBody> Dear {!Relatedto.CreatedBy.Name}, <br/> <br/> The contract you created on {!EUR_CRM_Contract__c.EUR_CRM_Account__c} is Approved. <br/>
+        <apex:outputPanel layout="none"><br/>
+            <table>
+                <tr>
+                    <td><strong>Contract Number : </strong></td>
+                    <td>               {!Relatedto.Name}             </td>
+                </tr>
+                <tr>
+                    <td><strong>Account Name : </strong></td>
+                    <td>               {!Relatedto.EUR_CRM_Account__r.Name}             </td>
+                </tr>
+                <tr>
+                    <td><strong>Contact : </strong></td>
+                    <td>                {!Relatedto.EUR_CRM_Contact__r.Name}            </td>
+                </tr>
+                <br/>
+                <tr>
+                    <td><strong>Contract Type : </strong></td>
+                    <td>                {!Relatedto.EUR_CRM_Contract_Type__c}            </td>
+                </tr>
+                <tr>
+                    <td><strong>Contract Status : </strong></td>
+                    <td>                {!Relatedto.EUR_CRM_Status__c}            </td>
+                </tr>
+                <tr>
+                    <td><strong>Active : </strong></td>
+                    <td>                {!Relatedto.EUR_CRM_Active__c}            </td>
+                </tr>
+                <tr>
+                    <td><strong>Audit Mandatory : </strong></td>
+                    <td>                {!Relatedto.EUR_CRM_Audit_Mandatory__c}            </td>
+                </tr>
+                <br/>
+                <tr>
+                    <td><strong>Start Date : </strong></td>
+                    <td>
+                        <apex:outputText value="{0,date,dd/MM/yyyy}">
+                            <apex:param value="{!Relatedto.EUR_CRM_Start_Date__c}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>End Date : </strong></td>
+                    <td>
+                        <apex:outputText value="{0,date,dd/MM/yyyy}">
+                            <apex:param value="{!Relatedto.EUR_CRM_End_Date__c}"/>
+                        </apex:outputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Contract Duration (month) : </strong></td>
+                    <td>                {!Relatedto.EUR_CRM_Contract_Duration_month__c}            </td>
+                </tr>
+                <br/>
+                <tr>
+                    <td><strong>Contract Actual Amount : </strong></td>
+                    <td>
+                        <apex:outputText value="{0,number,###0.00}">EUR&nbsp;<apex:param
+                                    value="{!relatedto.EUR_CRM_Contract_Actual_Amount__c}"/>
+                        </apex:outPutText>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Contract Actual Avg Annualized Amount : </strong></td>
+                    <td>
+                        <apex:outputText value="{0,number,###0.00}">EUR&nbsp;<apex:param
+                                    value="{!relatedto.EUR_CRM_Contract_Actual_Avg_Annual_Amt__c   }"/>
+                        </apex:outPutText>
+                    </td>
+                </tr>
+                <br/>
+                <tr>
+                    <td><strong>Is this contract material? </strong></td>
+                    <td>
+                        <apex:outputText value="{0,number,###0.00}">EUR&nbsp;<apex:param
+                                    value="{!relatedto.EUR_CRM_Is_this_contract_material__c}"/>
+                        </apex:outPutText>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Is this contract profitable enough? </strong></td>
+                    <td>
+                        <apex:outputText value="{0,number,###0.00}">EUR&nbsp;<apex:param
+                                    value="{!relatedto.EUR_CRM_Is_this_contract_profitable__c}"/>
+                        </apex:outPutText>
+                    </td>
+                </tr>
+            </table>
+        </apex:outputPanel>
+        <br/> To view more details of the Contract, click this link : <a
+                href="{!LEFT($Api.Partner_Server_URL_340, FIND(".com/",$Api.Partner_Server_URL_340)+3)}/{!relatedTo.Id}">        {!relatedTo.Name}    </a>
+        <br/>This Contract is taken by {!Relatedto.CreatedBy.Name}
+        <apex:outputText rendered="{!Relatedto.CreatedBy.MobilePhone != null}"> ({!Relatedto.CreatedBy.MobilePhone})
+        </apex:outputText>
+    </messaging:htmlEmailBody>
+</messaging:emailTemplate>
