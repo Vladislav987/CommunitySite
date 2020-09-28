@@ -79,9 +79,9 @@ public without sharing class LW_SalaryComponentController {
 
         }
         if (isInPublicGroup()) {
-            System.debug('isInPublicGroup--> ');
+            System.debug('isInPublicGroup-->');
             if (isAboveInHierarchy(contractorId)) {
-                System.debug('isAboveInHierarchy--> ');
+                System.debug('isAboveInHierarchy-->');
                 return dataWrapper;
 
             }
