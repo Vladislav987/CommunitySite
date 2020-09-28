@@ -1,0 +1,10 @@
+/**
+ * Created by MaxymMirona on 02.05.2020.
+ */
+
+.THIS.blocked-row{
+    background-color: #f3f2f2;
+}
+.THIS .picklist > label{
+    display: none;
+}

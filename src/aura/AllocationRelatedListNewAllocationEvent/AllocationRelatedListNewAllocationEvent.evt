@@ -1,0 +1,6 @@
+<!--
+ - Created by MaxymMirona on 13.01.2020.
+ -->
+
+<aura:event type="APPLICATION" description="AllocationRelatedListNewAllocationEvent">
+</aura:event>

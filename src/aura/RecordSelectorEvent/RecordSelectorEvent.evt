@@ -1,0 +1,7 @@
+<!--
+ - Created by ArtemShevchenko on 08.11.2019.
+ -->
+
+<aura:event type="COMPONENT" description="RecordSelectorEvent">
+    <aura:attribute name="selectedRecord" type="ProcessInstance"/>
+</aura:event>

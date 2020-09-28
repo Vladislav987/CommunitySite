@@ -1,0 +1,75 @@
+<!--
+ - Created by MaxymMirona on 02.05.2020.
+ -->
+
+<aura:component description="DataTable">
+
+    <aura:attribute name="columns" type="List" access="public" required="true" />
+    <aura:attribute name="data" type="List" access="public" required="true" />
+    <aura:attribute name="hideCheckboxColumn" type="Boolean" access="public" required="false" default="false"/>
+    <aura:attribute name="hideHeaderColumn" type="Boolean" access="public" required="false" default="false"/>
+    <aura:attribute name="preselectAll" type="Boolean" access="public" required="false" default="false"/>
+    <aura:attribute name="class" type="String" access="public" />
+    <aura:attribute name="emptyListMessage" type="String" access="public" default="There are no records to display"/>
+
+    <aura:attribute name="selectAllValue" type="Boolean" access="private" default="false"/>
+    <aura:attribute name="selectedRows" type="List" access="private" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+    <aura:handler name="change" value="{!v.data}" action="{!c.onPreselectAll}" />
+
+    <aura:method name="getSelectedRows" access="public" action="{!c.getSelectedRows}" />
+
+    <div class="{!v.class + ' slds-scrollable'}">
+        <table aria-multiselectable="{!not(v.hideCheckboxColumn)}" class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
+            <aura:if isTrue="{!not(v.hideHeaderColumn)}">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <aura:if isTrue="{!not(v.hideCheckboxColumn)}">
+                            <th class="slds-text-align_right" scope="col" style="width:3.25rem">
+                                <lightning:input
+                                        label=""
+                                        type="checkbox"
+                                        checked="{!v.data.length > 0 ? v.selectAllValue : false}"
+                                        value="{!v.selectAllValue}"
+                                        class="slds-th__action slds-th__action_form"
+                                        onchange="{!c.onChangeSelectAll}"
+                                        title="Select all"
+                                />
+                            </th>
+                        </aura:if>
+
+                        <aura:iteration items="{!v.columns}" var="column">
+                            <th scope="col" title="{!column.label}">
+                                <div class="slds-th__action slds-form-element slds-has-flexi-truncate">
+                                    <span class="slds-truncate">{!column.label}</span>
+                                </div>
+                            </th>
+                        </aura:iteration>
+                    </tr>
+                </thead>
+            </aura:if>
+
+            <tbody>
+                <aura:if isTrue="{!not(empty(v.data))}">
+                    <aura:iteration items="{!v.data}" var="rowData">
+                        <c:DataTableRow
+                                rowData="{!rowData}"
+                                columns="{!v.columns}"
+                                hideCheckboxColumn="{!v.hideCheckboxColumn}"
+                                aura:id="dataTableRow"
+                        />
+                    </aura:iteration>
+                </aura:if>
+            </tbody>
+
+        </table>
+
+        <aura:if isTrue="{!empty(v.data)}">
+            <div class="slds-align_absolute-center empty-array-message">
+                <p>{!v.emptyListMessage}</p>
+            </div>
+        </aura:if>
+
+    </div>
+</aura:component>

@@ -1,0 +1,96 @@
+<!--
+ - Created by Mariya Kropinova on 14.07.2020.
+ -->
+
+<!-- Modify Payroll Component -->
+<template>
+    <div>
+        <section role="dialog"
+                 tabindex="-1" aria-labelledby="modal-heading-01"
+                 aria-modal="true"
+                 aria-describedby="modal-content-id-1"
+                 class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close"
+                            onclick={closeModal}
+                    >
+                        <lightning-icon icon-name="utility:close"
+                                        alternative-text="close"
+                                        variant="inverse"
+                                        size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        Modify Payroll Component
+                    </h2>
+                </header>
+                <div class="add-campaign-block slds-modal__content slds-p-around_xx-large" id="modal-content-id-1">
+                    <div class="slds-grid slds-wrap slds-m-vertical_medium slds-text-title_caps slds-text-heading_large">
+                        <div class="slds-grid slds-size_1-of-1 slds-align-content-center">
+                            UNDER CONSTRUCTION
+                        </div>
+                    </div>
+<!--                    <lightning-record-edit-form class="slds-p-left_large" style="width:500px"-->
+<!--                                                onsuccess={onSuccess}-->
+<!--                                                record-id={recordIdPayroll}-->
+<!--                                                object-api-name={objectApiName}-->
+<!--                    >-->
+<!--                        <lightning-messages></lightning-messages>-->
+
+<!--                        <template for:each={layoutConfigFieldsList} for:item="field">-->
+<!--                            <div class="slds-grid slds-gutters slds-m-bottom_medium" key={field.value}>-->
+<!--                                <div class="slds-col slds-size_1-of-4 slds-p-left_none slds-p-right_none slds-p-vertical_xx-small">-->
+<!--                                    <span>{field.label}</span>-->
+<!--                                </div>-->
+<!--                                <div class="slds-col slds-size_3-of-4">-->
+<!--                                    <template if:true={field.isInputType}>-->
+<!--                                        <lightning-input-field field-name={field.value} variant="label-hidden">-->
+<!--                                        </lightning-input-field>-->
+<!--                                    </template>-->
+<!--                                    <template if:false={field.isInputType}>-->
+<!--                                        <lightning-output-field field-name={field.value} variant="label-hidden">-->
+<!--                                        </lightning-output-field>-->
+<!--                                    </template>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </template>-->
+<!--                        <div class="slds-grid slds-gutters slds-m-bottom_medium">-->
+<!--                            <div class="slds-col slds-size_1-of-4 slds-p-left_none slds-p-right_none slds-p-vertical_xxx-small">-->
+<!--                                <span>Created By</span>-->
+<!--                            </div>-->
+<!--                            <div class="slds-col slds-size_3-of-4">-->
+<!--                                <lightning-output-field field-name='CreatedById' variant="label-hidden">-->
+<!--                                </lightning-output-field>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <template if:true={isRecurrent}>-->
+<!--                            <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">-->
+<!--                                <lightning-icon icon-name="utility:warning" alternative-text="Warning!" variant="warning" size="x-small"></lightning-icon>-->
+<!--                                <h2 class="slds-m-left_small slds-text-align_left">If the payslip has been generated already, your changes will not have influence on the payslip!-->
+<!--                                    Please, regenerate it after your edition.-->
+<!--                                </h2>-->
+<!--                            </div>-->
+<!--                        </template>-->
+<!--                        <div class="slds-grid  slds-gutters slds-grid_align-space slds-m-top_xx-large">-->
+<!--                            <template if:false={isReadOnlyMode}>-->
+<!--                                <div class="slds-col">-->
+<!--                                    <lightning-button class="slds-m-top_small" type="submit" label="Save Record" variant="brand"></lightning-button>-->
+<!--                                </div>-->
+<!--                                <div class="slds-col">-->
+<!--                                    <lightning-button class="slds-m-top_small" label="Reset" onclick={handleReset}></lightning-button>-->
+<!--                                </div>-->
+<!--                            </template>-->
+<!--                            <div class="slds-col">-->
+<!--                                <lightning-button class="slds-m-top_small" label="Cancel" onclick={handleCancel}></lightning-button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </lightning-record-edit-form>-->
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</template>

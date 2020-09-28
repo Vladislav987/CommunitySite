@@ -1,0 +1,29 @@
+<template>
+    <div class="slds-clearfix">
+        <h2 class="card-title">{contractorPayslip.month}</h2>
+        <lightning-formatted-number value={contractorPayslip.Sum} format-style="currency"
+                                    currency-code={contractorPayslip.CurrencyIsoCode}
+                                    class="card-title slds-float_right">
+        </lightning-formatted-number>
+    </div>
+    <div class="slds-m-right_x-small slds-m-left_x-small slds-m-top_x-small">
+        <c-contractor-payslip-item-component
+                contractor-payslip-component={salaryComponent}>
+        </c-contractor-payslip-item-component>
+        <template if:true={contractorPayslip.Payroll_Components}>
+            <template for:each={contractorPayslip.Payroll_Components}
+                      for:item="contractorPayslipComponent">
+                <c-contractor-payslip-item-component
+                        key={contractorPayslipComponent.Id} contractor-payslip-component={contractorPayslipComponent}>
+                </c-contractor-payslip-item-component>
+            </template>
+        </template>
+    </div>
+    <div class="slds-clearfix slds-p-around_small">
+        <h2 class="salary-date-row">{salaryDate}</h2>
+        <lightning-formatted-date-time year="2-digit" month="2-digit" day="2-digit"
+                                       value={contractorPayslip.SalaryDate}
+                                       class="salary-date-row slds-float_right">
+        </lightning-formatted-date-time>
+    </div>
+</template>

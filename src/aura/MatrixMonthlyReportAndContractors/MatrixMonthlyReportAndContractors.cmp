@@ -1,0 +1,139 @@
+<aura:component description="MatrixMonthlyReportAndContractors" controller="MonthlyReportController"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+    <aura:attribute name="months" type="String[]"/>
+    <aura:attribute name="years" type="Integer[]"/>
+    <aura:attribute name="allocations" type="Allocation__c[]"/>
+    <aura:attribute name="allocationTypes" type="String[]" />
+    <aura:attribute name="filteredAllocations" type="Allocation__c[]"/>
+    <aura:attribute name="projects" type="Project__c[]"/>
+    <aura:attribute name="isLoading" type="Boolean" access="private" default="true"/>
+    <aura:attribute name="haveActiveFilter" type="Boolean" access="private" default="true"/>
+    <aura:attribute name="selectedType" type="String" />
+    <aura:attribute name="selectedYear" type="String" />
+    <aura:attribute name="selectedMonth" type="String" />
+
+    <aura:registerEvent name="GenerateMonthlyReportEvent" type="c:GenerateMonthlyReportEvent" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:html tag="style">
+        .slds-modal__container {
+        width: 70%;
+        max-width: 90rem;
+        }
+    </aura:html>
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <div class="slds-is-relative">
+        <aura:if isTrue="{!v.isLoading}">
+            <lightning:spinner/>
+        </aura:if>
+
+
+        <lightning:card>
+            <aura:set attribute="title">
+                <lightning:icon iconName="utility:connected_apps" size="small"/>
+                Report Generator
+            </aura:set>
+
+
+            <aura:set attribute="footer" >
+                <lightning:button label="Generate Monthly report"
+                                  class="slds-m-top_xx-small"
+                                  variant="brand"
+                                  onclick="{!c.onCreateReports}" />
+            </aura:set>
+
+            <lightning:layout>
+                <lightning:layoutItem  class="slds-p-around_medium" size="4">
+                    <lightning:select aura:id="select" label="Select a month" required="true" onchange="{!c.onAllocationFilter}" value="{!v.selectedMonth}">
+                        <option  value="{!month}">choose  one...</option>
+                        <aura:iteration items="{!v.months}" var="month">
+                            <option value="{!month}">{!month}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem class="slds-p-around_medium" size="4">
+                    <lightning:select aura:id="selectYear" label="Select a year" required="true" onchange="{!c.onAllocationFilter}" value="{!v.selectedYear}">
+                        <option value="{!month}">choose  one...</option>
+                        <aura:iteration items="{!v.years}" var="year">
+                            <option value="{!v.year}">{!year}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem class="slds-p-around_medium" size="4">
+                    <lightning:select aura:id="selectAllocationType" label="Select Allocation Type" required="false" onchange="{!c.onAllocationFilter}" value="{!v.selectedType}">
+                        <option value="{!month}">choose  one...</option>
+                        <aura:iteration items="{!v.allocationTypes}" var="allocation">
+                            <option value="{!allocation}">{!allocation}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <div class="container">
+                <table class="slds-table slds-table--bordered slds-table--col-bordered slds-box--border">
+
+                    <thead>
+                    <tr class="slds-text-heading--small">
+                        <th scope="col" class="cell">
+                        </th>
+                        <aura:iteration items="{!v.projects}" var="project">
+                            <th scope="col" class="cell">
+                                {!project.Name}
+                                <div class="slds-align_absolute-center slds-p-bottom--x-small slds-pb">
+                                    <lightning:input
+                                            label="Select all"
+                                            type="checkbox"
+                                            name="{!project.Id}"
+                                            onchange="{!c.onSelectAllColumnAllocations}"
+                                            class="select-all-checkbox slds-p-top--x-small"
+                                            aura:id="select-all-column-checkboxes"
+                                    />
+                                </div>
+                            </th>
+                        </aura:iteration>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                        <aura:iteration items="{!v.filteredAllocations}" var="allocation">
+                            <tr>
+                                <th  title="{!allocation.Contractor__r.Name}">
+                                    <aura:if isTrue="{!allocation.Contractor__r.Name}">
+                                        <p>{!allocation.Contractor__r.Name}</p>
+                                        <p> {!allocation.Name} </p>
+                                        <p> Type: {!allocation.Allocation_Type__c} </p>
+                                        <aura:set attribute="else">
+                                            {!allocation.Name}
+                                        </aura:set>
+                                    </aura:if>
+                                    <aura:if isTrue="{!allocation.Allocation_Type__c == 'Billable'}">
+                                        <p> Daily rate: {!allocation.Expected_Rate_Daily__c} </p>
+                                        <p> Currency: {!allocation.CurrencyIsoCode} </p>
+                                    </aura:if>
+                                </th>
+                                <aura:iteration items="{!v.projects}" var="project">
+                                    <td class="slds-text-align_center">
+                                        <lightning:input aura:id="checkbox"
+                                                         type="checkbox"
+                                                         value="{!project.Id + '/' + allocation.Id}"
+                                                         checked="false"
+                                                         onchange="{!c.onSelectCheckbox}"
+                                                         disabled="false"
+                                        />
+                                    </td>
+                                </aura:iteration>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+            </div>
+        </lightning:card>
+    </div>
+
+</aura:component>

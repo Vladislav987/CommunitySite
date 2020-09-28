@@ -1,0 +1,17 @@
+<!--
+ - Created by ArtemShevchenko on 08.11.2019.
+ -->
+
+<aura:component description="RecordForApprove">
+    <aura:attribute name="record" type="ProcessInstance"/>
+    <aura:attribute name="type" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="RecordSelectorEvent" type="c:RecordSelectorEvent"/>
+    <div class="slds-listbox_horizontal">
+        <lightning:input type="checkbox" label="" onchange="{!c.checkBoxController}"/>
+        <a onclick="{!c.navigateToRecord}">{!v.record.TargetObject.Name} </a>
+    </div>
+    <div class="slds-p-top--xxx-small slds-p-left--x-small" >
+        <h1 class="slds-p-left--large slds-text-title">{!v.type} - Submitted by {!v.record.CreatedBy.Name}</h1>
+    </div>
+</aura:component>

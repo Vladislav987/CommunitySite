@@ -1,0 +1,9 @@
+<!--
+ - Created by MaxymMirona on 28.01.2020.
+ -->
+
+<aura:event type="COMPONENT" description="AllocationsAndContractorsMatrixSendAppr">
+    <aura:attribute name="approveRequiredForContractor" type="Object" />
+    <aura:attribute name="isInit" type="Boolean" />
+    <aura:attribute name="allIsValid" type="Boolean" />
+</aura:event>

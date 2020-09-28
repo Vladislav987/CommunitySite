@@ -1,0 +1,17 @@
+<template>
+    <div class="slds-grid slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-float_left slds-p-around_small">
+        <lightning-combobox data-id="payslipTypesCombobox"
+                            if:true={payslipTypes}
+                            label={PAYSLIP_TYPES}
+                            value={selectedPayslipType}
+                            placeholder={SELECT_PAYSLIP_TYPES}
+                            options={payslipTypes}
+                            onchange={changePayslipType}>
+        </lightning-combobox>
+    </div>
+    <c-payroll-modification-table-for-non-recurrent if:false={isRecurrentSelected} pay-roll-cmp-config={payRollCmpConfig} non-recurrent-payslips={nonRecurrentPayslips} onrefresh={getPayrollComponents}></c-payroll-modification-table-for-non-recurrent>
+    <c-payroll-modification-table-for-recurrent if:true={isRecurrentSelected} pay-roll-cmp-config={payRollCmpConfig} recurrent-payslips={recurrentPayslips} onrefresh={getPayrollComponents}></c-payroll-modification-table-for-recurrent>
+    <template if:true={error}>
+        {errorMessage} {error}
+    </template>
+</template>

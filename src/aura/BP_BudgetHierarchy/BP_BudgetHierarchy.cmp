@@ -1,0 +1,24 @@
+<aura:component description="BP_BudgetHierarchy">
+    <aura:attribute name="budgetHierarchyItemList" type="List"/>
+    <aura:attribute name="finItemsForUpdate" type="List"/>
+    <aura:attribute name="currencyValues" type="List"/>
+    <aura:attribute name="currentForm" type="String" default="Global planning"/>
+    <aura:attribute name="readOnlyAccess" type="Boolean" default="false"/>
+
+    <lightning:accordion allowMultipleSectionsOpen="true">
+        <aura:iteration aura:id='auraId' items="{!v.budgetHierarchyItemList}" var="item"
+                        indexVar="indexVar">
+            <aura:if isTrue="{!not(empty(item.budgetHierarchyItems))}">
+                <lightning:accordionSection name="{!item.budgetElement.Name}"
+                                            label="{!item.budgetElement.Name}">
+                    <c:AccordionForBudgetItem budgetHierarchyItemList="{!item.budgetHierarchyItems}"
+                                              access="{!v.readOnlyAccess}"
+                                              currencyValues="{!v.currencyValues}"
+                                              currentForm="{!v.currentForm}"
+                                              finItemsForUpdate="{!v.finItemsForUpdate}"/>
+                </lightning:accordionSection>
+            </aura:if>
+        </aura:iteration>
+
+    </lightning:accordion>
+</aura:component>

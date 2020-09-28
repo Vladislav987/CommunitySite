@@ -1,0 +1,28 @@
+<aura:component description="modalBoxShareAction">
+    <aura:attribute name="parent" type="Aura.Component" required="true"/>
+    <aura:attribute name="showPopUp" type="Boolean" default="false"/>
+    <aura:attribute name="textOfPopUp" type="String"/>
+
+    <div class="demo-only" style="height: 600px;">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Header of Modal -->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close" iconClass="dark" class="slds-modal__close" size="large" variant="bare" alternativeText="Close" onclick="{! c.HideMe }"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Warning!</h2>
+                </header>
+                <!-- Body of Modal -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <ui:outputText aura:id = 'modalOutput' value="{!v.textOfPopUp}"/>
+                </div>
+                <!-- Footer of Modal -->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand" label="Yes" title="Yes" onclick="{! c.handleYes }" />
+                    <lightning:button variant="brand" label="Cancel" title="Cancel" onclick="{! c.HideMe }" />
+                </footer>
+            </div>
+        </section>
+        <!-- Backdrop to set background slightly opaque. -->
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</aura:component>

@@ -1,0 +1,72 @@
+<aura:component description="HeaderOfFinReport"
+                implements="force:appHostable,flexipage:availableForAllPageTypes"
+                controller="LA_HeaderOfFinReportController">
+
+    <aura:attribute name="changeGlobalStatus" type="Boolean" default="true"/>
+    <aura:attribute name="currentForm" type="String"/>
+    <aura:attribute name="headerWrapper" type="Object"/>
+    <aura:attribute name="currentBusinessUnit" type="String"/>
+    <aura:attribute name="showSpinner" type="Boolean"/>
+    <aura:attribute name="isShareActionDone" type="Boolean"/>
+    <aura:attribute name="maxVersion" type="String"/>
+
+
+    <aura:registerEvent name="accessForYear" type="c:accessForYear"/>
+    <aura:registerEvent name="updateHeaderWrapperEvent" type="c:updateHeaderWrapperEvent"/>
+    <aura:registerEvent name="getCostCenterId" type="c:getCostCenterId"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:method name="updateVersion" action="{!c.updateVersion}" access="PUBLIC"/>
+    <div>
+        <div class="slds-align--absolute-center slds-box slds-theme_default">
+            <aura:renderIf isTrue="{!v.headerWrapper.isGlobalAvailable}">
+                <lightning:button aura:id="Global planning"
+                                  variant="brand"
+                                  label="Global planning"
+                                  title="Global planning"
+                                  class="slds-large-size--1-of-4 Button1"
+                                  disabled="true"
+                                  onclick="{!c.handleClick}"/>
+            </aura:renderIf>
+            <aura:renderIf isTrue="{!v.headerWrapper.isCostCenterAvailable}">
+                <lightning:button aura:id="Cost Centers Planning"
+                                  variant="brand"
+                                  label="Cost Centers Planning"
+                                  title="Cost Centers Planning"
+                                  class="slds-size--1-of-4 Button2"
+                                  disabled="false"
+                                  onclick="{!c.handleClick}"/>
+            </aura:renderIf>
+        </div>
+
+        <div class="slds-box slds-theme_default " aura:id="mainDiv">
+            <div class=" slds-grid ">
+                <div class="slds-col slds-size--1-of-7 slds-p-horizontal_medium">
+                    <lightning:select aura:id="version" name="version" label="Select version"
+                                      onchange="{!c.getSelectedOption}">
+                        <aura:iteration items="{!v.headerWrapper.versionsList}" var="version">
+                            <option text="{!version}" value="{!version}"/>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <div class="slds-col slds-size--2-of-3 slds-p-horizontal_medium">
+                    <lightning:select aura:id="businessUnit" name="businessUnit" label="Select Cost Center"
+                                      onchange="{!c.getSelectedOption}"
+                                      value="{!v.currentBusinessUnit}">
+                        <aura:iteration items="{!v.headerWrapper.businessUnitsList}" var="businessUnit">
+                            <option text="{!businessUnit.Description__c}" value="{!businessUnit.Id}"/>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+                <div class="slds-col slds-size-1-of-6 slds-p-horizontal_medium">
+                    <lightning:select aura:id="year" name="year" label="Select year" onchange="{!c.getSelectedOption}">
+                        <aura:iteration items="{!v.headerWrapper.yearsList}" var="year">
+                            <option text="{!year}" value="{!year}"/>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</aura:component>

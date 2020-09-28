@@ -1,0 +1,15 @@
+<!--
+ - Created by Alex on 5/27/2020.
+ -->
+
+<aura:component description="BP_Month">
+    <aura:attribute name="months" type="String[]"/>
+    
+    <aura:iteration items="{!v.months}" var="month" indexVar="indexVar">
+        <div class="slds-box slds-theme_default "
+             style="{! if(indexVar%2 == 0,'background-color:#E1DFDF','background-color:white')}">
+            {!month}
+        </div>
+    </aura:iteration>
+
+</aura:component>

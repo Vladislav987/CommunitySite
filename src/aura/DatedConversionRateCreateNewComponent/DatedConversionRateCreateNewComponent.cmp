@@ -1,0 +1,51 @@
+<!--
+ - Created by MaxymMirona on 24.12.2019.
+ -->
+
+<aura:component controller="DatedConversionRateController" >
+    <aura:attribute name="isLoading" type="Boolean" default="true"/>
+    <aura:attribute name="records" type="List" />
+    <aura:attribute name="startDate" type="Date" />
+    <aura:attribute name="newExchangeRates" type="List" />
+    <aura:attribute name="blockedStartDates" type="List" />
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:registerEvent name="CreateNewExchangeRatesEvent" type="c:DatedConversionRateCreateNewEvent"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+
+    <aura:if isTrue="{!v.isLoading}">
+        <div class="slds-is-relative">
+            <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
+        </div>
+        <aura:set attribute="else">
+            <lightning:card>
+                <lightning:layout class="slds-align-top slds-align-content-center" verticalAlign="start">
+                    <lightning:layoutItem class="slds-p-around_small">
+                        <lightning:input type="date" label="Start Date" value="{!v.startDate}" required="true" onchange="{!c.checkStartDateForValidity}" aura:id="StartDate"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem class="slds-p-around_small">
+                        <aura:iteration items="{!v.newExchangeRates}" var="rate">
+                            <lightning:input type="number"
+                                             label="{!rate.IsoCode}"
+                                             formatter="decimal"
+                                             value="{!rate.ConversionRate}"
+                                             step="any" aura:id="Rate"
+                                             onchange="{!c.checkRatesForValidity}"
+                                             required="true"
+                            />
+                        </aura:iteration>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <aura:set attribute="footer" >
+                    <lightning:button label="Submit"
+                                      class="slds-m-top_xx-small"
+                                      variant="brand"
+                                      onclick="{!c.onHandleSubmit}" />
+                </aura:set>
+            </lightning:card>
+        </aura:set>
+    </aura:if>
+</aura:component>

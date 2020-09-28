@@ -1,0 +1,48 @@
+<aura:component controller="AllocationController">
+    <aura:attribute name="allocationRecordTypes" type="String[]" />
+    <aura:attribute name="selectedAllocationRecordType" type="String" />
+    <aura:attribute name="relationshipFieldApiName" type="String" />
+    <aura:attribute name="sObjectId" type="Id" />
+    <aura:attribute name="isLoading" type="Boolean" default="true"/>
+
+    <aura:registerEvent name="NewAllocationEvent" type="c:AllocationRelatedListNewAllocationEvent"/>
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:if isTrue="{!v.isLoading}">
+        <div class="slds-is-relative">
+            <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
+        </div>
+        <aura:set attribute="else">
+            <lightning:card>
+                <lightning:layout horizontalAlign="center" class="slds-align-top" verticalAlign="start">
+                    <lightning:layoutItem class="slds-p-bottom_small">
+                        <lightning:radioGroup label="Select a record type"
+                                              options="{!v.allocationRecordTypes}"
+                                              value="{!v.selectedAllocationRecordType}"
+                                              type="radio"
+                                              variant="label-stacked"
+                                              />
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <aura:set attribute="footer">
+                    <div class="slds-float--right">
+                        <lightning:layout horizontalAlign="space" verticalAlign="end">
+                            <lightning:layoutItem>
+                                <lightning:button label="Cancel"
+                                                  variant="neutral"
+                                                  onclick="{!c.doCancel}"/>
+                                <lightning:button label="Next"
+                                                  variant="brand"
+                                                  onclick="{!c.doCreateNewRecord}"/>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+                </aura:set>
+            </lightning:card>
+        </aura:set>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,13 @@
+/**
+ * Created by VasylKhrystynych on 5/19/2020.
+ */
+
+.related_list {
+    height: auto;
+    min-height: 160px;
+    max-height: 345px;
+}
+
+.related_list_empty_message {
+    height: 160px;
+}

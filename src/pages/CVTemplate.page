@@ -1,0 +1,157 @@
+<!--
+ - Created by pz on 2019-04-22.
+ -->
+<apex:page id="CVTemplate" extensions="CVTemplateController"
+           sidebar="false"
+           standardStylesheets="false"
+           applyHtmlTag="false"
+           applyBodyTag="false"
+           showHeader="false"
+           renderAs="{!rendAs}"
+           contentType="{!contType}"
+           standardController="Contractor__c"
+           cache="true"
+           readOnly="true"
+>
+
+
+
+    <html xmlns:w="urn:schemas-microsoft-com:office:word">
+        <head>
+            <style type="text/css" media="print">
+                @page {
+                    @top-center {
+                        content: element(header);
+                    }
+                    @bottom-left {
+                        content: element(footer);
+                    }
+                }
+                div.header {
+                    padding: 10px;
+                    position: running(header);
+                }
+                div.footer {
+                    display: block;
+                    padding: -50px;
+                    position: running(footer);
+                }
+                .pagenumber:before {
+                    content: counter(page);
+                }
+                .pagecount:before {
+                    content: counter(pages);
+                }
+                .prefont {
+                    font-family: "times", monospace;
+                }
+            </style>
+            <style type="text/css">
+                table{
+                    border-collapse: collapse;
+                }
+                td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                }
+                pre .prefont {
+                    font-family: "times", monospace;
+                }
+                .noBreak{
+                    width:100%;
+                    page-break-inside:avoid;
+                }
+            </style>
+        </head>
+        <body>
+
+
+
+        <!-- COMPANY LOGO: GETS MOVED TO HEADER ON PDF PRINT BY CSS-->
+        <div class="header">
+
+            <!-- BELOW ONLY FORMAT SUPPORTED BY WORD, STATIC RESOURCES DO NOT WORK, EVEN THIS FORMAT BREAKS IN WORD ONLINE -->
+            <!-- https://ctdevsf--dev.my.salesforce.com/servlet/servlet.ImageServer?id=0159E000000ZfZo&oid=00D9E0000008pVe -->
+            <apex:image rendered="true" url="{!logoUrl}" alt="CT Logo" style="padding-bottom:1rem;"/>
+        </div>
+
+        <!-- CONTRACTOR NAME AND TITLE -->
+        <h2 style="text-align: center">{! contractor__c.Name}</h2>
+        <h3 style="text-align: center">{! contractor__c.Resource_Level__c} {! contractor__c.Resource_Type__c}</h3>
+
+        <!-- CONTRACTOR SUMMARY -->
+        <h4><u>PROFESSIONAL SUMMARY:</u></h4>
+        <apex:outputText value="{! contractor__c.Professional_Summary__c}" escape="false"/>
+
+        <!-- CONTRACTOR CERTIFICATION -->
+        <h4><u>CERTIFICATION:</u></h4>
+        <ul>
+            <apex:repeat value="{!certs}" var="cert" id="certs">
+                <li>{!cert}</li>
+            </apex:repeat>
+            <br/>
+            <div style="text-align: center">
+                <apex:repeat value="{!certPics}" var="certPic" id="certPics">
+                    <apex:image style="" rendered="true" url="{!certPic}" alt="CT Logo"/>
+                </apex:repeat>
+            </div>
+        </ul>
+
+        <!-- CONTRACTOR TECH SKILLS TABLE -->
+        <h4><u>TECHNICAL SKILLS:</u></h4>
+        <table width="100%">
+            <apex:repeat value="{!techsKeys}" var="techKey" id="techs">
+                <tr width="50%">
+                    <td>{!techKey}</td>
+                    <td><apex:repeat value="{!techs[techKey]}" var="tech" id="dettechs">
+                            {!tech};
+                        </apex:repeat>
+                    </td>
+                </tr>
+
+            </apex:repeat>
+
+        </table>
+
+        <!-- CONTRACTOR LANGUAGES -->
+        <h4><u>LANGUAGES:</u></h4>
+        <apex:outputField value="{! contractor__c.Language__c}"/>
+
+        <!-- CONTRACTOR EDUCATION -->
+        <h4><u>EDUCATION:</u></h4>
+        <apex:outputField value="{! contractor__c.Education__c}"/>
+
+        <!-- PROJECTS BLOCK -->
+        <apex:outputPanel rendered="{! NOT(ISNULL(projs)) && projs.size > 0}">
+            <h4><u>PROJECT EXPERIENCE:</u></h4>
+            <apex:repeat value="{!projs}" var="proj" id="projs">
+                <div style="width:100%;page-break-inside:avoid;"></div>
+                    <!-- PROJECT INFO -->
+                    <div class="noBreak"><b><u>Customer:</u> </b>{! IF ( NOT(ISBLANK(proj.pj.Account__r.Name)) , proj.pj.Account__r.Name , proj.name )}</div><br/>
+                    <div class="noBreak"><b>Description: </b>{! proj.description}</div><br/>
+                    <div class="noBreak"><b>Role: </b>{! contractor__c.Resource_Type__c}</div><br/>
+
+                    <!-- CONTRACTOR RESPONSIBILITIES -->
+                    <div class="noBreak">
+                        <div><b>Responsibilities:</b></div>
+                        <apex:outputField value="{!proj.responsibility.Responsibilities__c}"/>
+                        <br/>
+                        <br/>
+                    </div>
+
+                    <apex:outputPanel rendered="{! NOT(ISBLANK(proj.pj.Technologies__c))}">
+                        <div class="noBreak">
+                            <div><b>Technologies:</b></div>
+                            <apex:outputField value="{!proj.pj.Technologies__c}"></apex:outputField>
+                        </div>
+                    </apex:outputPanel>
+                    <br/>
+                    <br/>
+
+            </apex:repeat>
+        </apex:outputPanel>
+
+        </body>
+    </html>
+
+</apex:page>

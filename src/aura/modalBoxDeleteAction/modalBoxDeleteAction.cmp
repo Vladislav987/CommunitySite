@@ -1,0 +1,24 @@
+<aura:component description="modalBoxDeleteAction">
+    <aura:attribute name="parent" type="Aura.Component" required="true"/>
+    <aura:attribute name="showDeleteConfirmPopUp" type="boolean" default="false"/>
+
+    <div role="dialog" class="slds-modal slds-fade-in-open ">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <lightning:buttonIcon iconName="utility:close" iconClass="dark" class="slds-modal__close" size="large" variant="bare" alternativeText="Close" onclick="{! c.HideMe }"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Confirmation</h2>
+            </header>
+
+            <div class="slds-modal__content slds-p-around--medium">
+                <b>Are you sure you want to delete this draft?</b>
+            </div>
+
+            <footer class="slds-modal__footer">
+                <lightning:button name='No' label='No' onclick='{!c.handleNO}'/>
+                <lightning:button variant="brand" name='Yes' label='Yes' onclick='{!c.handleYES}'/>
+            </footer>
+
+        </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop--open"></div>
+</aura:component>

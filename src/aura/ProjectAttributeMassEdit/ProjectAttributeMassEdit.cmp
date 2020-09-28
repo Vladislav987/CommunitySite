@@ -1,0 +1,153 @@
+<!--
+ * Created by Lambru Dmytro on 19.03.2020.
+ * NOTES:
+        - "pame_" - component css namespace.
+ -->
+<aura:component access="public" controller="ProjectAttributeController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" description="ProjectAttributeMassEdit">
+    <!--  RESOURCES  -->
+    <ltng:require scripts="{! $Resource.LightningUtil }" afterScriptsLoaded="{!c.handleInit}"/>
+
+    <!--  ATTRIBUTES  -->
+    <aura:attribute access="public" type="Id" name="recordId" default="" description="Project record ID" />
+    <!-- private -->
+    <aura:attribute access="private" type="Boolean" name="isEditMode" default="false" description="" />
+    <aura:attribute access="private" type="List" name="masterWithSpecializationsOptionList" default="[]" description="A list with options for the Master__c field and with dependent options for the Specialization__c field" />
+    <aura:attribute access="private" type="List" name="masterWithSpecializationsOptionList_TMP1" default="[]" description="" />
+    <aura:attribute access="private" type="List" name="masterWithSpecializationsOptionList_TMP2" default="[]" description="" />
+    <aura:attribute access="private" type="List" name="changedMasterWithSpecializationsOptionList" default="[]" description="" />
+
+    <!-- COMPONENT TEXT CONSTANTS (can be moved to Custom Labels) -->
+    <!-- for elements -->
+    <aura:attribute access="private" type="String" name="CMP_HEADER_TEXT" default="Project attributes (Specialization)" />
+    <aura:attribute access="private" type="String" name="BTN_LABEL_EDIT" default="Edit" />
+    <aura:attribute access="private" type="String" name="BTN_LABEL_EXPAND_ALL" default="Expand All" />
+    <aura:attribute access="private" type="String" name="BTN_LABEL_EDIT_COLLAPSE_ALL" default="Collapse All" />
+    <aura:attribute access="private" type="String" name="BTN_LABEL_SAVE" default="Create Attributes" />
+    <aura:attribute access="private" type="String" name="BTN_LABEL_CANCEL" default="Cancel" />
+    <!-- for toasts -->
+    <aura:attribute access="private" type="String" name="SUCCESS_TOAST_TITLE_CHANGES_SAVED" default="Changes saved!" />
+    <aura:attribute access="private" type="String" name="ERROR_TOAST_TITLE_ALREADY_CHANGED" default="Someone has already made changes!" />
+    <aura:attribute access="private" type="String" name="ERROR_TOAST_MSG_ALREADY_CHANGED" default="Please refresh the page." />
+    <aura:attribute access="private" type="String" name="ERROR_TOAST_TITLE_NOTHING_TO_SAVE" default="Nothing to save!" />
+    <aura:attribute access="private" type="String" name="ERROR_TOAST_MSG_NOTHING_TO_SAVE" default="Please make changes first." />
+
+    <!-- MARKUP -->
+    <lightning:card variant="Narrow" title="{# v.CMP_HEADER_TEXT }" iconName="custom:custom83">
+        <!-- CARD ACTIONS -->
+        <aura:set attribute="actions">
+            <aura:if isTrue="{! not(v.isEditMode) }">
+                <lightning:button label="{# v.BTN_LABEL_EDIT }" iconName="utility:edit" iconPosition="left" variant="neutral" onclick="{! c.handleEditBtnClick }" />
+            </aura:if>
+            <lightning:buttonIcon iconName="utility:expand_alt" variant="border" alternativeText="{# v.BTN_LABEL_EXPAND_ALL }" onclick="{! c.handleExpandBtnClick }"/>
+            <lightning:buttonIcon iconName="utility:contract_alt" variant="border" alternativeText="{# v.BTN_LABEL_EDIT_COLLAPSE_ALL }" onclick="{! c.handleCollapseBtnClick }"/>
+        </aura:set>
+
+        <!-- CARD BODY -->
+        <lightning:spinner aura:id="#card_spinner" class="slds-hide" size="large" variant="brand" alternativeText="Loading" />
+
+        <lightning:layout multipleRows="true">
+            <!-- 1st COLUMN -->
+            <lightning:layoutItem class="slds-p-horizontal_small" size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                <!-- ACCORDION ITEM -->
+                <lightning:layoutItem class="slds-p-bottom_x-small" size="12">
+                    <aura:iteration indexVar="masterIndex" var="masterWithSpecializationsOption" items="{! v.masterWithSpecializationsOptionList_TMP1 }">
+                        <div class="slds-p-bottom_xx-small">
+                            <c:Util_AccordionBoxed aura:id="#util_accordion" name="{# masterWithSpecializationsOption.optionApiName }">
+                                <!-- ACCORDION TITLE -->
+                                <aura:set attribute="title">
+                                    <span class="slds-truncate slds-text-color_weak pame_accordion_title" title="{# masterWithSpecializationsOption.optionLabel }">
+                                        {# masterWithSpecializationsOption.optionLabel }
+                                    </span>
+                                </aura:set>
+                                <!-- ACCORDION CONTENT -->
+                                <aura:set attribute="content">
+                                    <div class="slds-text-color_weak slds-p-horizontal_medium slds-p-vertical_xx-small">
+                                        <!-- CHECKBOX GROUP -->
+                                        <fieldset class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <aura:iteration indexVar="specializationIndex" var="specializationPicklistOption" items="{! masterWithSpecializationsOption.specializationPicklistOptionList }">
+                                                        <!-- CHECKBOX -->
+                                                        <div class="slds-checkbox">
+                                                            <input type="checkbox"
+                                                                   name="options"
+                                                                   id="{# 'checkbox-first-column-id-' + masterIndex + specializationIndex }"
+                                                                   data-master-option-api-name="{# masterWithSpecializationsOption.optionApiName }"
+                                                                   data-specialization-option-api-name="{# specializationPicklistOption.optionApiName }"
+                                                                   data-specialization-option-is-selected="{# specializationPicklistOption.isSelected }"
+                                                                   checked="{! if( specializationPicklistOption.isSelected, 'checked', '') }"
+                                                                   disabled="{! if(v.isEditMode, '', 'disabled') }"
+                                                                   onchange="{! c.handleCheckboxChange }" />
+                                                            <label class="slds-checkbox__label" for="{# 'checkbox-first-column-id-' + masterIndex + specializationIndex }">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                                <span class="slds-form-element__label">{# specializationPicklistOption.optionLabel }</span>
+                                                            </label>
+                                                        </div>
+                                                </aura:iteration>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </aura:set>
+                            </c:Util_AccordionBoxed>
+                        </div>
+                    </aura:iteration>
+                </lightning:layoutItem>
+            </lightning:layoutItem>
+
+            <!-- 2nd COLUMN -->
+            <lightning:layoutItem class="slds-p-horizontal_small" size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6">
+                <!-- ACCORDION ITEM -->
+                <lightning:layoutItem class="slds-p-bottom_x-small" size="12">
+                    <aura:iteration indexVar="masterIndex" var="masterWithSpecializationsOption" items="{! v.masterWithSpecializationsOptionList_TMP2 }">
+                        <div class="slds-p-bottom_xx-small">
+                            <c:Util_AccordionBoxed aura:id="#util_accordion" name="{# masterWithSpecializationsOption.optionApiName }">
+                                <!-- ACCORDION TITLE -->
+                                <aura:set attribute="title">
+                                    <span class="slds-truncate slds-text-color_weak pame_accordion_title" title="{# masterWithSpecializationsOption.optionLabel }">
+                                        {# masterWithSpecializationsOption.optionLabel }
+                                    </span>
+                                </aura:set>
+                                <!-- ACCORDION CONTENT -->
+                                <aura:set attribute="content">
+                                    <div class="slds-text-color_weak slds-p-horizontal_medium slds-p-vertical_xx-small">
+                                        <!-- CHECKBOX GROUP -->
+                                        <fieldset class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                                <aura:iteration indexVar="specializationIndex" var="specializationPicklistOption" items="{! masterWithSpecializationsOption.specializationPicklistOptionList }">
+                                                        <!-- CHECKBOX -->
+                                                        <div class="slds-checkbox">
+                                                            <input type="checkbox"
+                                                                   name="options"
+                                                                   id="{# 'checkbox-second-column-id-' + masterIndex + specializationIndex }"
+                                                                   data-master-option-api-name="{# masterWithSpecializationsOption.optionApiName }"
+                                                                   data-specialization-option-api-name="{# specializationPicklistOption.optionApiName }"
+                                                                   data-specialization-option-is-selected="{# specializationPicklistOption.isSelected }"
+                                                                   checked="{! if( specializationPicklistOption.isSelected, 'checked', '') }"
+                                                                   disabled="{! if(v.isEditMode, '', 'disabled') }"
+                                                                   onchange="{! c.handleCheckboxChange }" />
+                                                            <label class="slds-checkbox__label" for="{# 'checkbox-second-column-id-' + masterIndex + specializationIndex }">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                                <span class="slds-form-element__label">{# specializationPicklistOption.optionLabel }</span>
+                                                            </label>
+                                                        </div>
+                                                </aura:iteration>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </aura:set>
+                            </c:Util_AccordionBoxed>
+                        </div>
+                    </aura:iteration>
+                </lightning:layoutItem>
+            </lightning:layoutItem>
+        </lightning:layout>
+
+        <!-- CARD FOOTER -->
+        <aura:set attribute="footer">
+            <aura:if isTrue="{! v.isEditMode }">
+                <lightning:button label="{# v.BTN_LABEL_SAVE }" variant="brand" onclick="{! c.handleSaveBtnClick }" />
+                <lightning:button label="{# v.BTN_LABEL_CANCEL }" variant="neutral" onclick="{! c.handleCancelBtnClick }"/>
+            </aura:if>
+        </aura:set>
+    </lightning:card>
+
+</aura:component>

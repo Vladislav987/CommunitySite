@@ -1,0 +1,30 @@
+<!--
+ - Created by Lambru Dmytro on 19.03.2020.
+ * NOTES:
+        - "uab_" - component css namespace.
+ -->
+<aura:component access="public" description="Util_AccordionBoxed">
+    <!-- ATTRIBUTES -->
+    <aura:attribute access="public" type="Aura.Component[]" name="title" description="Nested title markup" />
+    <aura:attribute access="public" type="Aura.Component[]" name="content" description="Nested content markup" />
+    <aura:attribute access="public" type="String" name="name" default="" description="Name for component definition" />
+    <aura:attribute access="public" type="Boolean" name="isOpen" default="false" description="Open by default ?" />
+
+    <!-- HANDLERS -->
+    <aura:handler name="init" value="{!this}" action="{! c.handleInit }"/>
+
+    <!-- METHODS -->
+    <aura:method name="open" description="To open accordion" />
+    <aura:method name="close" description="To close accordion" />
+
+    <!-- MARKUP -->
+    <!-- TITLE -->
+    <button aura:id="#accordion_button" class="uab_accordion" onclick="{!c.handleAccordionBtnClick}">
+        {!v.title}
+    </button>
+    <!-- CONTENT -->
+    <div class="uab_panel">
+        {!v.content}
+    </div>
+
+</aura:component>

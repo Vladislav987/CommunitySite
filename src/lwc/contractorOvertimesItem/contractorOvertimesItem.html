@@ -1,0 +1,79 @@
+<template>
+    <div class="slds-box box-size slds-m-top_x-small">
+        <h2 class="card-title">{overtimeForCurrentYear.key}</h2>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <template for:each={overtimeForCurrentYear.value.columnsForOvertimesTable}
+                              for:item="columnForOvertimesTable">
+                        <th scope="col" key={columnForOvertimesTable}>
+                            <div class="slds-truncate">{columnForOvertimesTable}</div>
+                        </th>
+                    </template>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">{overtimeForCurrentYear.value.expectedHours}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">{overtimeForCurrentYear.value.factHours}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">{overtimeForCurrentYear.value.delta}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">{overtimeForCurrentYear.value.approvedHours}</div>
+                    </th>
+                    <th scope="col">
+                        <lightning-formatted-number class="slds-align_absolute-center"
+                                                    value={overtimeForCurrentYear.value.overtimeRate}
+                                                    format-style="currency"
+                                                    currency-code={overtimeForCurrentYear.value.currencyIsoCode}>
+                        </lightning-formatted-number>
+                    </th>
+                    <th scope="col">
+                        <lightning-formatted-number class="slds-align_absolute-center"
+                                                    value={overtimeForCurrentYear.value.totalCost}
+                                                    format-style="currency"
+                                                    currency-code={overtimeForCurrentYear.value.currencyIsoCode}>
+                        </lightning-formatted-number>
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+        <template if:true={overtimeForCurrentYear.value.projectForOvertimeWrappers}>
+            <div class="slds-grid slds-col slds-size_4-of-5 slds-medium-size_11-of-12 slds-align_absolute-center slds-m-top_medium slds-m-bottom_x-small">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <template for:each={overtimeForCurrentYear.value.columnsForProjectsTable} for:item="columnForProjectsTable">
+                                <th scope="col" key={columnForProjectsTable}>
+                                    <div class="slds-truncate">{columnForProjectsTable}</div>
+                                </th>
+                            </template>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={overtimeForCurrentYear.value.projectForOvertimeWrappers} for:item="projectForOvertimeWrapper">
+                            <tr key={projectForOvertimeWrapper.Id}>
+                                <th scope="col">
+                                    <div class="slds-align_absolute-center">{projectForOvertimeWrapper.projectName}</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-align_absolute-center">{projectForOvertimeWrapper.factHours}</div>
+                                </th>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+        <div class="slds-p-around_x-small">
+            Approved status:
+            <template if:true={overtimeForCurrentYear.value.isApproved}>&#10004;</template>
+            <template if:false= {overtimeForCurrentYear.value.isApproved}>&#63;</template>
+        </div>
+    </div>
+</template>

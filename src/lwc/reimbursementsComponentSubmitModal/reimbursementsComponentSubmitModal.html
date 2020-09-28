@@ -1,0 +1,87 @@
+<!--
+ - Created by IlliaLuhovyi on 6/15/2020.
+ -->
+
+<!-- Reimbursements Component Submit Modal -->
+<template>
+    <template if:true={isModalShown}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class={modalClass}>
+            <template if:true={isLoaderShown}>
+                <lightning-spinner alternative-text={constants.SPINNER_LABEL} size="medium"></lightning-spinner>
+            </template>
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title={constants.BTN_CLOSE_LABEL} onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" size="medium">
+                        </lightning-icon>
+                        <span class="slds-assistive-text">{constants.BTN_CLOSE_LABEL}</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{constants.MODAL_HEADER}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="form-block">
+                        <template for:each={inputRow} for:item="item">
+                            <div key={item.random_id} class="inputs-row">
+                                <div class="column-w33" data-index={item.key}>
+                                    <lightning-input class="r-sum" required onchange={onSumChange} name="sum" step="0.01" label={constants.INPUT_SUM_LABEL} type="number"></lightning-input>
+                                </div>
+                                <div class="column-w33" data-index={item.key}>
+                                    <lightning-combobox class="r-curr" required onchange={onCurrChange} options={currOptions} name="curr" label={constants.INPUT_CURRENCY_LABEL}></lightning-combobox>
+                                </div>
+                                <div class="column-w33" data-index={item.key}>
+                                    <lightning-textarea class="r-comment" onchange={onCommentChange}  name="comment" label={constants.INPUT_COMMENT_LABEL} maxlength="255"></lightning-textarea>
+                                </div>
+                                <template if:true={isDeleteBtnShown}>
+                                    <div class="delete-btn" onclick={deleteRow} data-index={item.random_id}>
+                                        <lightning-icon  icon-name="utility:close" size="xx-small" alternative-text={constants.BTN_DELETE_LABEL} title={constants.BTN_DELETE_LABEL}></lightning-icon>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="action-column">
+                        <div class="row">
+                            <lightning-button label={constants.BTN_ADD_LABEL} title={constants.BTN_ADD_LABEL} icon-name="utility:add" class="slds-m-left_x-small" onclick={addNewRow}></lightning-button>
+                            <lightning-input label="" class="r-file" name="file" onchange={onFilesChange} type="file" multiple></lightning-input>
+                            <div class="column slds-m-left_small">
+                                <template for:each={fileNames} for:item="file" for:index="idx">
+                                    <div class="slds-color__text_gray-10 slds-size_small slds-m-top_x-small" key={file}>
+                                        <div class="parent">
+                                            {file}
+                                            <div class="file-delete delete-btn" onclick={deleteFile} data-index={idx}>
+                                                <lightning-icon  icon-name="utility:close" size="xx-small" alternative-text={constants.BTN_FILE_DELETE_LABEL} title={constants.BTN_FILE_DELETE_LABEL}></lightning-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label={constants.BTN_CANCEL} variant="neutral" onclick={closeModal} class="slds-m-right_small"></lightning-button>
+                    <lightning-button label={constants.BTN_SEND} variant="brand" disabled={isSendButtonDisabled} onclick={beforeSubmit}></lightning-button>
+                </footer>
+            </div>
+            <template if:true={isAlertShown}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class={alertClass}>
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">{constants.ALERT_HEADER}</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                            <div class="slds-align_absolute-center" style="height:5rem">{constants.ALERT_BODY}</div>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <lightning-button label={constants.BTN_CANCEL} variant="neutral" onclick={closeAlert} class="slds-m-right_small"></lightning-button>
+                            <lightning-button label={constants.BTN_ABSOLUTELY_SEND} variant="brand" onclick={sendWithoutFiles}></lightning-button>
+                        </footer>
+                    </div>
+                </section>
+                <div class={backdropAlertClass}></div>
+            </template>
+
+        </section>
+        <div class={backdropClass}></div>
+    </template>
+</template>

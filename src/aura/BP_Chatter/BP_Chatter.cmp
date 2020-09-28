@@ -1,0 +1,30 @@
+<aura:component>
+    <aura:handler event="c:getCostCenterId" action="{!c.handleCreateChatter}"/>
+    <div  id="chatterIcon" class="chatterIcon">
+        <lightning:buttonIcon iconName="utility:share_post"
+                              size="large"
+                              variant="container"
+                              alternativeText="Chat"
+                              title="Chat"
+                              onclick="{!c.openForm}"/>
+    </div>
+    <div id="chatForm" class="chatterPopUp">
+        <lightning:buttonIcon iconName="utility:close"
+                              size="large"
+                              variant="container"
+                              alternativeText="Chat"
+                              title="Chat"
+                              onclick="{!c.closeForm}"/>
+        <aura:if isTrue="{!v.body[0].type == 'forceChatter:publisher'}">
+            {!v.body[0]}
+            {!v.body[1]}
+            <aura:set attribute="else">
+                {!v.body[1]}
+                {!v.body[0]}
+            </aura:set>
+        </aura:if>
+    </div>
+
+
+
+</aura:component>

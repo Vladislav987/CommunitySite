@@ -1,0 +1,91 @@
+<aura:component extensible="true" controller="AllocationController" implements="flexipage:availableForAllPageTypes,force:hasRecordId">
+    <aura:attribute name="statuses" type="String[]" access="private"/>
+    <aura:attribute name="types" type="String[]" access="private"/>
+    <aura:attribute name="contractors" type="List" />
+    <aura:attribute name="selectedStatus" type="String" access="private" />
+    <aura:attribute name="selectedType" type="String" access="private" />
+    <aura:attribute name="selectedContractor" type="Contractor__c" />
+    <aura:attribute name="columns" type="List" default="[{label: 'Name', fieldName: 'Name', type: 'text'}]"/>
+    <aura:attribute name="filteredRecords" type="List" access="private" />
+    <aura:attribute name="records" type="List" access="private" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" access="private" />
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="c:AllocationRelatedListNewAllocationEvent" action="{!c.doInit}" />
+    <aura:handler event="c:GenerateMonthlyReportEvent" action="{!c.doInit}" />
+
+    <lightning:card>
+        <aura:set attribute="actions">
+            <lightning:button variant="neutral" label="New" onclick="{!c.doCreateNewRecord}" />
+        </aura:set>
+        <aura:set attribute="title">
+            <div class="slds-icon_container slds-icon-custom-2">
+                <lightning:icon iconName="custom:custom2" size="small"/>
+            </div>
+            Allocations ({!v.filteredRecords.length})
+        </aura:set>
+        <lightning:layout horizontalAlign="center" verticalAlign="end">
+            <lightning:layoutItem class="slds-p-around_small">
+                <lightning:select name="status" label="Status" aura:id="status" value="{!v.selectedStatus}" >
+                    <option text="All" value="" selected="true"/>
+                    <aura:iteration items="{!v.statuses}" var="status">
+                        <option text="{!status.label}" value="{!status.id}" selected="{!status.label==v.selectedStatus}"/>
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem class="slds-p-around_small">
+                <lightning:select name="Type" label="Type" aura:id="Type" value="{!v.selectedType}">
+                    <option text="All" value="" selected="true"/>
+                    <aura:iteration items="{!v.types}" var="type">
+                        <option text="{!type.label}" value="{!type.id}" selected="{!type.label==v.selectedType}"/>
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem class="slds-p-around_small">
+                <lightning:select name="contractor" label="Contractor" aura:id="contractor" value="{!v.selectedContractor}">
+                    <option text="All" value="" selected="true"/>
+                    <aura:iteration items="{!v.contractors}" var="contractor">
+                        <option text="{!contractor.Name == null ? 'Empty Contractor' : contractor.Name}" value="{!contractor.Id == '' ? null : contractor.Id}" />
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem class="slds-p-around_small">
+                <lightning:button label="Search"
+                                  class="slds-m-top_xx-small"
+                                  variant="brand"
+                                  onclick="{!c.onFilterAllocations}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+        <aura:if isTrue="{!v.isLoading}">
+            <div>
+                <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
+            </div>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!not(empty(v.filteredRecords))}" >
+                    <div class="slds-scrollable_y" id="related_list">
+                        <lightning:datatable keyField="Id"
+                                             isLoading="{!v.isLoading}"
+                                             data="{!v.filteredRecords}"
+                                             columns="{!v.columns}"
+                                             hideCheckboxColumn="true"
+                                             draftValues="{! v.draftValues }"
+                                             showRowNumberColumn="true"
+                                             onrowaction="{!c.onHandleRowAction}"/>
+                    </div>
+                    <aura:set attribute="else">
+                        <div class="slds-scrollable_y slds-align_absolute-center" id="related_list_empty_message">
+                            <p>
+                                No items to display.
+                            </p>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+</aura:component>

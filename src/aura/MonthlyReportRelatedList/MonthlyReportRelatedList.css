@@ -1,0 +1,14 @@
+/**
+ * Created by MaxymMirona on 29.11.2019.
+ */
+
+.THIS #related_list{
+    height:auto;
+    max-height: 360px;
+}
+.THIS #related_list_empty_message{
+    height: 160px;
+}
+.THIS #view_all_link{
+    cursor: pointer;
+}

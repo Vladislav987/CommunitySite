@@ -1,0 +1,16 @@
+<!--
+ - Created by Ponomarov Vladyslav on 03.06.2020.
+ -->
+
+<aura:component description="ContainerMassTransferOfAllocations"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+
+    <aura:html tag="style">
+        .slds-modal__container {
+        width: 70%;
+        max-width: 90rem;
+        }
+    </aura:html>
+
+    <c:mass_transfer_of_allocations recordId="{!v.recordId}" onclose="{!c.closeMethodInAuraController}"/>
+</aura:component>

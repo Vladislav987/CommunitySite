@@ -1,0 +1,108 @@
+<!--
+ - Created by MaxymMirona on 02.05.2020.
+ -->
+
+<aura:component description="DataTableRow">
+    <aura:attribute name="rowData" type="Object" access="public" required="true" />
+    <aura:attribute name="columns" type="List" access="public" required="true" />
+    <aura:attribute name="hideCheckboxColumn" type="Boolean" access="public" required="false" />
+    <aura:attribute name="isRowSelected" type="Boolean" access="public" default="false" />
+    <aura:attribute name="isBlocked" type="Boolean" access="public" default="false" />
+
+    <aura:attribute name="rowDataToIterate" type="List" access="private" />
+    <aura:attribute name="rowDataHeader" type="String" access="private" />
+    <aura:attribute name="pickListsValue" type="String" access="private" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+
+    <aura:attribute name="body" type="Aura.Component[]" />
+
+    <tr class="slds-hint-parent" id="{!'datatable-row-' + globalId}" title="{!v.rowData.BlockRow.BlockedTitle}">
+
+        <td class="slds-text-align_right" role="gridcell" style="width:2.5rem">
+            <aura:if isTrue="{!and(not(v.hideCheckboxColumn), not(v.isBlocked))}">
+                <lightning:input
+                        id="{!'datatable-row-checkbox-' + globalId}"
+                        type="checkbox"
+                        label=""
+                        checked="{!v.isRowSelected}"
+                />
+            </aura:if>
+        </td>
+
+        <th scope="row">
+            <div class="slds-truncate">
+                <aura:if isTrue="{!v.rowDataHeader.type == 'url'}">
+                    <lightning:formattedUrl
+                            value="{!v.rowDataHeader.value}"
+                            label="{!v.rowDataHeader.typeAttributesLabel == null ? v.rowDataHeader.value : v.rowDataHeader.typeAttributesLabel}"
+                            target="{!v.rowDataHeader.target}"
+                            title="{!v.rowDataHeader.typeAttributesLabel == null ? v.rowDataHeader.value : v.rowDataHeader.typeAttributesLabel}"
+                    />
+                    <aura:set attribute="else">
+                        <lightning:formattedText value="{!v.rowDataHeader.value}" />
+                    </aura:set>
+                </aura:if>
+            </div>
+        </th>
+
+        <aura:iteration items="{!v.rowDataToIterate}" var="rowData">
+            <td>
+                <div class="slds-truncate">
+                    <aura:if isTrue="{!rowData.type == 'picklist'}">
+                        <lightning:select label="" class="picklist" disabled="{!v.isBlocked}" value="{!v.pickListsValue}" onchange="{!c.onPicklistChange}">
+                            <aura:iteration items="{!rowData.valueSet}" var="option">
+                                <option value="{!option.Id}" label="{!option.Label}"/>
+                            </aura:iteration>
+                        </lightning:select>
+                    </aura:if>
+
+                    <aura:if isTrue="{!rowData.type == 'date'}">
+                        <lightning:formattedDateTime value="{!rowData.value}" title="{!rowData.value}"/>
+                    </aura:if>
+
+                    <aura:if isTrue="{!rowData.type == 'percent'}">
+                        <lightning:formattedNumber
+                                value="{!rowData.value}"
+                                maximumFractionDigits="{!rowData.decimalPlaces}"
+                                title="{!rowData.value}"
+                        />
+                    </aura:if>
+
+                    <aura:if isTrue="{!rowData.type == 'number'}">
+                        <lightning:formattedNumber value="{!rowData.value}" title="{!rowData.value}"/>
+                    </aura:if>
+
+                    <aura:if isTrue="{!rowData.type == 'currency'}">
+                        <lightning:formattedNumber
+                                value="{!rowData.value}"
+                                style="currency"
+                                currencyCode="{!rowData.typeAttributesCurrency}"
+                                maximumFractionDigits="{!rowData.typeAttributesMaximumSignificantDigits}"
+                                currencyDisplayAs="code"
+                                title="{!rowData.value}"
+                        />
+                    </aura:if>
+
+                    <aura:if isTrue="{!rowData.type == 'text'}">
+                        <lightning:formattedText value="{!rowData.value}" title="{!rowData.value}"/>
+                    </aura:if>
+
+                    <aura:if isTrue="{!rowData.type == 'id'}">
+                        <lightning:formattedUrl
+                                value="{!rowData.value}"
+                                label="{!rowData.typeAttributesLabel == null ? rowData.value : rowData.typeAttributesLabel}"
+                                target="{!rowData.target}"
+                                title="{!rowData.typeAttributesLabel == null ? rowData.value : rowData.typeAttributesLabel}"
+                        />
+                    </aura:if>
+
+                    <aura:set attribute="else">
+                        <lightning:formattedText value="{!rowData.value}" title="{!rowData.value}"/>
+                    </aura:set>
+                </div>
+            </td>
+        </aura:iteration>
+    </tr>
+
+</aura:component>

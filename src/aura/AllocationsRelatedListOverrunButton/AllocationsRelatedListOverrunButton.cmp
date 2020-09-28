@@ -1,0 +1,41 @@
+<aura:component controller="AllocationController">
+    <aura:attribute name="overrunTypes" type="String[]" />
+    <aura:attribute name="selectedOverrunType" type="String" />
+    <aura:attribute name="allocation" type="Allocation__c" />
+    <aura:attribute name="allocationType" type="String" />
+    <aura:attribute name="projectId" type="Id" />
+    <aura:attribute name="isLoading" type="Boolean" default="true"/>
+
+    <aura:registerEvent name="NewAllocationEvent" type="c:AllocationRelatedListNewAllocationEvent"/>
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+
+    <aura:if isTrue="{!v.isLoading}">
+        <div class="slds-is-relative">
+            <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
+        </div>
+        <aura:set attribute="else">
+            <lightning:card>
+                <p class="slds-align--absolute-center slds-p-bottom_large">This Allocation will be created with 0% and will be activated automatically.</p>
+                <lightning:layout horizontalAlign="center" class="slds-align-top" verticalAlign="start">
+                    <lightning:layoutItem class="slds-p-bottom_large">
+                        <lightning:select name="overrunType" label="Overrun Type" value="{!v.selectedOverrunType}">
+                            <aura:iteration items="{!v.overrunTypes}" var="item">
+                                <option value="{!item}"> {!item} </option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                </lightning:layout>
+                <aura:set attribute="footer" >
+                    <lightning:button label="Submit"
+                                      class="slds-m-top_xx-small"
+                                      variant="brand"
+                                      onclick="{!c.onHandleClick}" />
+                </aura:set>
+            </lightning:card>
+        </aura:set>
+    </aura:if>
+</aura:component>

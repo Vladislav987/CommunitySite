@@ -1,0 +1,110 @@
+<!--
+ - Created by MaxymMirona on 23.04.2020.
+ -->
+
+<aura:component description="MultiSelectPicklist" implements="force:appHostable">
+    <aura:attribute name="label" type="String" required="false" access="public"/>
+    <aura:attribute name="items" type="String[]" default="['First', 'Second']" required="true" access="public" />
+    <aura:attribute name="selectedOptions" type="List" access="public" />
+    <aura:attribute name="onchange" type="Aura.Action" access="public"/>
+    <aura:attribute name="helpText" type="String" access="public" />
+
+    <aura:attribute name="noneString" type="String" default="--None--" access="private" />
+    <aura:attribute name="itemsToIterate" type="List" access="private" />
+
+    <aura:handler name="change" value="{!v.selectedOptions}" action="{!v.onchange}" />
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+
+    <aura:method name="getSelectedValues" action="{!c.getSelectedValues}" access="public" />
+
+    <div class="slds-form-element">
+        <label class="slds-form-element__label slds-p-left_xxx-small" for="combobox-id">{!v.label}</label>
+        <aura:if isTrue="{!not(v.helpText == '')}" >
+            <lightning:helptext content="{!v.helpText}" />
+        </aura:if>
+
+        <div class="slds-form-element__control">
+            <div class="slds-combobox_container slds-size_x-small slds-p-left_xxx-small" onclick="{!c.onExpandOrCollapseListBox}">
+
+                <div aura:id="combobox" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                        <input type="text" class="slds-input slds-combobox__input" id="combobox-id" aria-controls="listbox-id"
+                               value="{!
+                                       v.selectedOptions.length > 1 ?
+                                           v.selectedOptions.length + ' Options selected' :
+                                               v.selectedOptions.length == 1 ?
+                                                    v.selectedOptions[0] :
+                                               v.noneString
+                                       }"
+                               autoComplete="off" role="textbox" readonly="true"
+                        />
+                        <span class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_right">
+                            <lightning:icon iconName="utility:down" size="xx-small" />
+                        </span>
+                    </div>
+                    <div id="listbox-id" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+
+                            <li role="presentation" class="slds-listbox__item">
+                                <div aura:id="none-option" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-is-selected slds-has-focus" role="option" onclick="{!c.onSelectNoneOption}">
+                                    <span class="slds-media__figure slds-listbox__option-icon">
+                                        <aura:if isTrue="{!empty(v.selectedOptions)}">
+                                            <span class="slds-icon_container slds-icon-utility-check slds-current-color">
+                                                <lightning:icon iconName="utility:check" size="xx-small" />
+                                            </span>
+                                        </aura:if>
+                                    </span>
+                                    <span class="slds-media__body">
+                                        <span class="slds-truncate">{!v.noneString}</span>
+                                    </span>
+                                </div>
+                            </li>
+
+                            <aura:iteration items="{!v.itemsToIterate}" var="item" indexVar="i">
+
+                                <li role="presentation" class="slds-listbox__item">
+                                    <div aura:id="option" id="{!i}" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option" onclick="{!c.onSelectPicklistOption}">
+                                        <span class="slds-media__figure slds-listbox__option-icon">
+                                            <aura:if isTrue="{!item.isSelected}">
+                                                <span class="slds-icon_container slds-icon-utility-check slds-current-color">
+                                                    <lightning:icon iconName="utility:check" size="xx-small" />
+                                                </span>
+                                            </aura:if>
+                                        </span>
+
+                                        <span class="slds-media__body">
+                                            <span class="slds-truncate">{!item.value}</span>
+                                        </span>
+                                    </div>
+                                </li>
+
+                            </aura:iteration>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <aura:if isTrue="{!v.selectedOptions.length > 1}">
+                <div class="slds-listbox_selection-group slds-pill_container slds-size_small slds-scrollable_y">
+                    <ul class="slds-listbox slds-listbox_horizontal" role="listbox" aria-label="Selected Options:" aria-orientation="horizontal">
+                        <aura:iteration items="{!v.selectedOptions}" var="option" indexVar="i">
+
+                            <li class="slds-listbox-item" role="presentation">
+                              <span class="slds-pill slds-size_xx-small" role="option" tabindex="0" aria-selected="true">
+                                <span class="slds-pill__label slds-p-left_xx-small">{!option}</span>
+                                <span id="{!option}" class="slds-icon_container slds-pill__remove" title="Remove" onclick="{!c.onRemovePillOption}">
+                                    <lightning:icon iconName="utility:close" size="xx-small"/>
+                                </span>
+                              </span>
+                            </li>
+
+                        </aura:iteration>
+                    </ul>
+                </div>
+            </aura:if>
+
+        </div>
+    </div>
+
+</aura:component>

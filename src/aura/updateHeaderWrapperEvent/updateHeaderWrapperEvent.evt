@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="updateHeaderWrapperEvent">
+    <aura:attribute name="headerWrapper" type="Object"/>
+</aura:event>

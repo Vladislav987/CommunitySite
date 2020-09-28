@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="accessForYear">
+    <aura:attribute name="readOnlyAccess" type="Boolean" default="false"/>
+</aura:event>

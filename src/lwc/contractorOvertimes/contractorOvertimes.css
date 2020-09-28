@@ -1,0 +1,11 @@
+.flex-direction-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    color: #00396b;
+    font-size: 1rem;
+    font-weight: 600;
+    display: inline-flex;
+}

@@ -1,0 +1,11 @@
+/**
+ * Created by MaxymMirona on 02.05.2020.
+ */
+
+.THIS #select-all-checkbox {
+    display: inline-flex;
+}
+
+.THIS .empty-array-message {
+    height: 6rem;
+}

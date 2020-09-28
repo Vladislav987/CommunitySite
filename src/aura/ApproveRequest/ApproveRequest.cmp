@@ -1,0 +1,51 @@
+<!--
+ - Created by ArtemShevchenko on 11.11.2019.
+ -->
+
+<aura:component description="ApproveRequest" implements="flexipage:availableForAllPageTypes"
+                controller="ItemForApproveController">
+    <aura:attribute name="ObjectName" type="String" default="Allocation__c"/>
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="hasRecords" type="Boolean" default="true"/>
+    <aura:attribute name="draftValues" type="Object" default="[]"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:layout>
+        <lightning:layoutItem >
+            <lightning:select aura:id="selectObject" name="Object" label="Type of Records" required="false" class="slds-size--small" onchange="{!c.changeData}">
+                <option value="Allocation__C">Allocation</option>
+                <option value="Job_Request__c">Job Request</option>
+                <option value="Applied_Position__c">Applied Position</option>
+                <option value="Travel_request__c">Travel request</option>
+            </lightning:select>
+        </lightning:layoutItem >
+        <lightning:layoutItem class="slds-p-left--small buttonPad">
+            <lightning:button name="approve" label="Approve" onclick="{!c.approve}"/>
+            <lightning:button name="reject" label="Reject" onclick="{!c.reject}"/>
+            <aura:if isTrue="{!v.showSpinner}">
+            <div>
+                <lightning:spinner alternativeText="Loading" size="small" />
+            </div>
+            </aura:if>
+        </lightning:layoutItem>
+    </lightning:layout>
+    <br/>
+        <aura:if isTrue="{!v.hasRecords}">
+            <div style="height: auto" >
+                <lightning:datatable
+                        aura:id="dataTable"
+                        columns="{! v.columns }"
+                        data="{!v.data }"
+                        keyField="id"
+                        onrowaction="{! c.handleRowAction }"
+                        />
+            </div>
+            <aura:set attribute="else">
+                <div class="slds-align_absolute-center">
+                    <h1 class="slds-text-heading--medium"> No approval requests need your attention right now.</h1>
+                </div>
+            </aura:set>
+        </aura:if>
+</aura:component>

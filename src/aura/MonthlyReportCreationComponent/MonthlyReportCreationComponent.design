@@ -1,0 +1,3 @@
+<design:component>
+	<design:attribute name="isSuccessful" label="Is Successful?" />
+</design:component>

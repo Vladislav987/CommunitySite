@@ -1,0 +1,231 @@
+/**
+ * Created by IlliaLuhovyi on 4/16/2020.
+ */
+
+.slds-text-title_bold {
+    margin-bottom: 10px;
+}
+
+.slds-form-element__legend {
+    font-size: .875rem;
+}
+
+.slds-radio .slds-form-element__label {
+    color: #000;
+}
+
+.slds-has-divider_bottom {
+    margin: 15px 0;
+}
+
+lightning-layout-item {
+    width: 100%;
+}
+
+.accordion-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.accordion-section .accordion-section__block.sub {
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+}
+
+.accordion-section .accordion-section__block.sub.open {
+    opacity: 1;
+    visibility: visible;
+    height: 40px;
+    margin: 5px 0;
+}
+
+.payroll-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-radius: 4px;
+    align-self: flex-end;
+    -webkit-box-shadow: 0px 4px 15px 0px rgba(179,179,179,1);
+    -moz-box-shadow: 0px 4px 15px 0px rgba(179,179,179,1);
+    box-shadow: 0px 4px 15px 0px rgba(179,179,179,1);
+    font-size: 14px;
+}
+
+.payroll-section .payroll-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.payroll-section .payroll-row:last-child {
+    margin-bottom: 0;
+}
+
+.payroll-section .payroll-row span {
+    margin-right: 10px;
+}
+
+.payroll-section .payroll-row span b {
+    margin-right: 3px;
+}
+
+.accordion-section .accordion-section__block.w100 {
+    width: 100%;
+}
+
+.accordion-section .accordion-section__block.w90 {
+    width: 90%;
+}
+
+.accordion-section .accordion-section__block.w80 {
+    width: 80%;
+}
+
+.form-block {
+    margin-bottom: 15px;
+}
+
+.form-block .inputs-row {
+    display: flex;
+    box-shadow: 0 4px 15px 0 #b3b3b3;
+    border-radius: 4px;
+    margin-top: 10px;
+    position: relative;
+}
+
+.form-block .inputs-row:first-child {
+    margin-top: 0;
+}
+
+.form-block .inputs-row .column-w33 {
+    width: 33%;
+    padding: 0 15px;
+}
+
+.form-block .inputs-row lightning-input {
+    max-width: 220px;
+}
+
+.form-block .inputs-row lightning-combobox {
+    max-width: 220px;
+}
+
+.info-block {
+    display: flex;
+    align-items: center;
+    background-color: #dcdce8;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.info-block .info-row {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.info-block .info-row span {
+    margin-right: 8px;
+}
+
+.info-block .info-row span b {
+    margin-right: 3px;
+}
+
+.action-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+}
+
+.action-column .column {
+    display: flex;
+    flex-direction: column;
+}
+
+.action-column .row:first-child {
+    margin-bottom: 10px;
+}
+
+.action-column .row lightning-button-icon {
+    margin-left: 10px;
+}
+
+.action-column .row lightning-input  {
+    margin-left: 5px;
+    margin-bottom: 16px;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+table {
+    border-spacing: 1;
+    border-collapse: collapse;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+table * {
+    position: relative;
+}
+table td, table th {
+    padding-left: 8px;
+}
+table thead tr {
+    height: 60px;
+}
+table tbody tr {
+    height: 50px;
+}
+table tbody tr:last-child {
+    border: 0;
+}
+table td, table th {
+    text-align: left;
+}
+table td.l, table th.l {
+    text-align: right;
+}
+table td.c, table th.c {
+    text-align: center;
+}
+table td.r, table th.r {
+    text-align: center;
+}
+
+
+.table100-head th{
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #e1e0e0;
+}
+
+tbody tr {
+    font-size: 15px;
+    color: #4b4b4b;
+    line-height: 1.2;
+    font-weight: unset;
+}
+
+.pointer {
+    cursor: pointer;
+}

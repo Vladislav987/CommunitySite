@@ -1,0 +1,84 @@
+<aura:component description="CustomTableForAllocations">
+    <aura:attribute name="allocations" type="Allocation__c[]" description="records to be shown in the table"/>
+    <aura:attribute name="readOnly" type="Boolean" description="attribute for changing a checkbox in a table"/>
+    <aura:attribute name="checked" type="Boolean" />
+    <aura:attribute name="tableName" type="String"/>
+    <aura:attribute name="selectedAllocations" type="String[]" description="selected recordsId that we pass to the parent"/>
+    <aura:attribute name="helpText" type="String" description="not required attribute"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:method name="uncheckAll" action="{!c.uncheckAll}"/>
+
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered" title="{!v.tableName}">
+
+        <caption  class="slds-p-vertical_x-small" style="font-weight: bolder">{!v.tableName}
+            <aura:if isTrue="{!v.helpText}">
+            <lightning:helptext class="customIcon"
+                                content="{!v.helpText}"
+            />
+            </aura:if>
+        </caption>
+
+        <thead>
+        <th class="slds-text-title_caps" scope="col">
+            <div class="slds-truncate slds-align_absolute-center slds-p-bottom--x-small slds-pb" title="Choose">
+                Select all</div>
+            <div class="slds-align_absolute-center slds-p-left_medium">
+                <lightning:input aura:id="selAll"
+                                 type="checkbox"
+                                 checked="{!v.checked}"
+                                 disabled="{!v.readOnly}"
+                                 onchange="{!c.selectAllAllocations}"
+                />
+            </div>
+
+        </th>
+        <th class="slds-text-title_caps" scope="col">
+            <div class="slds-truncate" title="Name">Name</div>
+        </th>
+        <th class="slds-text-title_caps" scope="col">
+            <div class="slds-truncate" title="Contractor">Contractor</div>
+        </th>
+        <th class="slds-text-title_caps" scope="col">
+            <div class="slds-truncate" title="Type">Type</div>
+        </th>
+        <th class="slds-text-title_caps" scope="col">
+            <div class="slds-truncate" title="Type">Daily rate</div>
+        </th>
+        <th class="slds-text-title_caps" scope="col">
+            <div class="slds-truncate" title="Type">Currency</div>
+        </th>
+        </thead>
+        <tbody>
+        <aura:iteration items="{!v.allocations}" var="allocation">
+            <tr>
+                <td class="slds-text-align_center">
+
+                    <lightning:input aura:id="checkbox"
+                                     type="checkbox"
+                                     value="{!allocation.Id}"
+                                     disabled="{!v.readOnly}"
+                                     onchange="{!c.onChange}"
+                    />
+                </td>
+                <td>
+                    <option class="slds-container_center">{!allocation.Name}</option>
+                </td>
+                <td>
+                    <option class="slds-container_center">{!allocation.Contractor__r.Name}</option>
+                </td>
+                <td>
+                    <option class="slds-container_center">{!allocation.Allocation_Type__c}</option>
+                </td>
+                <td>
+                    <option class="slds-container_center">{!allocation.Expected_Rate_Daily__c}</option>
+                </td>
+                <td>
+                    <option class="slds-container_center">{!allocation.CurrencyIsoCode}</option>
+                </td>
+            </tr>
+        </aura:iteration>
+        </tbody>
+    </table>
+
+</aura:component>

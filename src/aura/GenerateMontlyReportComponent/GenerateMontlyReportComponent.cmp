@@ -1,0 +1,67 @@
+<!--
+ - Created by Mychailo Hamdzii on 16.04.2019.
+ -->
+
+<aura:component controller="MonthlyReportController"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+
+    <aura:attribute name="months" type="List" access="private"/>
+    <aura:attribute name="selectedMonths" type="String[]" access="private"/>
+    <aura:attribute name="years" type="List" access="private"/>
+    <aura:attribute name="selectedYears" type="String[]" access="private"/>
+    <aura:attribute name="isLoading" type="Boolean" access="private" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <div class="slds-is-relative">
+    <aura:if isTrue="{!v.isLoading}">
+        <lightning:spinner/>
+    </aura:if>
+
+    <lightning:card>
+
+        <aura:set attribute="title">
+
+            <lightning:icon iconName="utility:connected_apps" size="small"/>
+            Report Generator
+
+        </aura:set>
+
+        <aura:set attribute="footer">
+            <lightning:button label="Generate Monthly Report"
+                              class="slds-m-top_xx-small"
+                              variant="brand"
+                              onclick="{!c.onReportGenerationStart}"/>
+        </aura:set>
+
+        <lightning:layout horizontalAlign="space">
+
+            <lightning:layoutItem class="slds-p-around_xx-small">
+                <lightning:dualListbox aura:id="months"
+                                       label="Select Months"
+                                       sourceLabel="Available"
+                                       selectedLabel="Selected"
+                                       options="{!v.months}"
+                                       value="{!v.selectedMonths}"/>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem class="slds-p-around_xx-small">
+                <lightning:dualListbox aura:id="years"
+                                       label="Select Years"
+                                       sourceLabel="Available"
+                                       selectedLabel="Selected"
+                                       options="{!v.years}"
+                                       value="{!v.selectedYears}"/>
+            </lightning:layoutItem>
+
+        </lightning:layout>
+
+    </lightning:card>
+    </div>
+
+</aura:component>

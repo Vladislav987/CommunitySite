@@ -1,0 +1,33 @@
+<!--
+ - Created by ArtemShevchenko on 08.11.2019.
+ -->
+
+<aura:component description="ItemsToApprove" implements="flexipage:availableForAllPageTypes"
+                controller="ItemForApproveController">
+    <aura:attribute name="itemsForApprove" type="ProcessInstance[]"/>
+    <aura:attribute name="hasRecord" type="Boolean" default="false"/>
+    <aura:attribute name="selectedRecords" type="ProcessInstance[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="RecordSelectorEvent" event="c:RecordSelectorEvent" action="{!c.updateSelectedRecordsList}"/>
+        <lightning:card class="slds-p-left--small">
+            <h1 class="slds-p-bottom--medium slds-text-title_bold">Items to Approve</h1>
+            <aura:if isTrue="{!v.hasRecord}">
+                <aura:iteration items="{!v.itemsForApprove}" var="item">
+                    <c:RecordForApprove record="{!item}"/>
+                </aura:iteration>
+                <br/>
+                <div class="slds-align_absolute-center">
+                    <lightning:button variant="neutral" label="Approve" onclick="{!c.approve}"/>
+                    <lightning:button variant="neutral" label="Reject" onclick="{!c.reject}"/>
+                </div>
+                <footer class="slds-card__footer ">
+                    <lightning:button class="slds-align_absolute-center" variant="base" name="all" label="View All" onclick="{!c.navigateToRecords}"/>
+                </footer>
+                <aura:set attribute="else">
+                    <div class="slds-align_absolute-center">
+                        No approval requests need your attention right now.
+                    </div>
+                </aura:set>
+            </aura:if>
+        </lightning:card>
+</aura:component>

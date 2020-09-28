@@ -1,0 +1,29 @@
+/**
+ * Created by MaxymMirona on 28.01.2020.
+ */
+
+.THIS #percent_input_header{
+    text-align: left;
+    padding-left: 0.5rem;
+    font-size: 0.95rem;
+}
+.THIS #percent_input_header p{
+    font-size: 0.73rem;
+}
+.THIS #footer-buttons{
+    display: inline-block;
+}
+.THIS #related_list_empty_message{
+    height: 160px;
+}
+.THIS #related_list{
+    height:auto;
+    max-height: 360px;
+}
+.THIS thead th {
+    position: -webkit-sticky; /* for Safari */
+    position: sticky;
+    top: 0;
+    background: #f4f3ff;
+    z-index: 2;
+}

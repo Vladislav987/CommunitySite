@@ -1,0 +1,105 @@
+/**
+ * Created by IlliaLuhovyi on 6/15/2020.
+ */
+
+.form-block {
+    margin-bottom: 15px;
+}
+
+.form-block .inputs-row {
+    display: flex;
+    box-shadow: 0 4px 15px 0 #b3b3b3;
+    border-radius: 4px;
+    margin-top: 10px;
+    position: relative;
+}
+
+.form-block .inputs-row:first-child {
+    margin-top: 0;
+}
+
+.form-block .inputs-row .column-w33 {
+    width: 33%;
+    padding: 0 15px;
+}
+
+.form-block .inputs-row lightning-input {
+    max-width: 220px;
+}
+
+.form-block .inputs-row lightning-combobox {
+    max-width: 220px;
+}
+
+.info-block {
+    display: flex;
+    align-items: center;
+    background-color: #dcdce8;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.info-block .info-row {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.info-block .info-row span {
+    margin-right: 8px;
+}
+
+.info-block .info-row span b {
+    margin-right: 3px;
+}
+
+.action-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.action-column .row {
+    display: flex;
+    align-items: center;
+}
+
+.action-column .column {
+    display: flex;
+    flex-direction: column;
+}
+
+.action-column .row:first-child {
+    margin-bottom: 10px;
+}
+
+.action-column .row lightning-button-icon {
+    margin-left: 10px;
+}
+
+.action-column .row lightning-input  {
+    margin-left: 5px;
+    margin-bottom: 16px;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.file-delete.delete-btn {
+    top: 3px;
+    right: -20px;
+}
+
+lightning-spinner {
+    background-color: unset;
+}
+
+.parent {
+    position: relative;
+}

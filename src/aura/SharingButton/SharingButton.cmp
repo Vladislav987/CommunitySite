@@ -1,0 +1,50 @@
+<!--
+ - Created by ArtemShevchenko on 15.11.2019.
+ -->
+
+<aura:component controller="SharingButtonController" description="SharingButton" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:hasSObjectName">
+
+    <aura:attribute name="options" type="List" />
+    <aura:attribute name="selectedEntities" type="List"/>
+    <aura:attribute name="currentRecordId" type="Id"/>
+    <aura:attribute name="currentUserId" type="Id"/>
+    <aura:attribute name="entityType" type="String" default="Users"/>
+    <aura:attribute name="allocationRecord" type="Object"/>
+    <aura:attribute name="recordLoadError" type="String"/>
+    <aura:attribute name="accessLevel" type="String" default="Read"/>
+
+    <force:recordData aura:id="recordLoader" recordId="{!v.recordId}" fields="Name, OwnerId"
+                      targetFields="{!v.allocationRecord}" targetError="{!v.recordLoadError}"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:if isTrue="{!v.allocationRecord.OwnerId == v.currentUserId}">
+        <div class="slds-listbox_horizontal">
+    <lightning:select aura:id="selectEntity" name="Entity" label="Choose with whom to share" required="false" class="slds-size--small" onchange="{!c.changeData}">
+        <option value="Users">Users</option>
+        <option value="Groups">Groups</option>
+        <option value="Roles">Roles</option>
+    </lightning:select>
+        <lightning:select aura:id="selectLevel" name="AccessLevel" label="Access level" required="false" class="slds-size-x-small slds-p-left--xx-large" onchange="{!c.changeAccessLevel}">
+            <option value="Read">Read</option>
+            <option value="Edit">Read/Write</option>
+        </lightning:select>
+        </div>
+
+    <lightning:dualListbox name="Users"
+                           label="Select Users"
+                           selectedLabel="Share with"
+                           fieldLevelHelp="Select users to sharing"
+                           options="{!v.options}"
+                           value="{!v.selectedEntities}"
+                           onchange="{!c.handleDualListBoxChange}"/>
+    <lightning:button label="Share" variant="brand" onclick="{!c.shareRecord}" class="slds-align_absolute-center slds-m-top--medium"/>
+
+        <aura:set attribute="else">
+            <h1 class="slds-text-heading--medium slds-m-top--xx-large">You are not the owner of this record, and that's why You cannot share it.</h1>
+        </aura:set>
+
+    </aura:if>
+</aura:component>

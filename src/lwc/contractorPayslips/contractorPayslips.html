@@ -1,0 +1,26 @@
+<template>
+    <div class="slds-grid slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-align_absolute-center flex-direction-column">
+        <template if:true={payslipsForCurrentYear}>
+            <lightning-combobox if:true={years}
+                                label="Year"
+                                value={selectedYear}
+                                placeholder="Select a year"
+                                options={years}
+                                onchange={changeYear}>
+            </lightning-combobox>
+            <template for:each={payslipsForCurrentYear} for:item="contractorPayslip">
+                <c-contract-payslip-item class="slds-box box-size slds-m-top_x-small flex-direction-column"
+                                         key={contractorPayslip.Id} contractor-payslip={contractorPayslip}>
+                </c-contract-payslip-item>
+            </template>
+        </template>
+
+        <template if:false={payslipsForCurrentYear}>
+            {noPayslipsFound}
+        </template>
+    </div>
+
+    <template if:true={error}>
+        {errorMessage} {error}
+    </template>
+</template>

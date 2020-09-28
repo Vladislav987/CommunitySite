@@ -1,0 +1,16 @@
+<!--
+ - Created by MaxymMirona on 02.06.2020.
+ -->
+
+<aura:component description="GenerateInvoiceRecalculateButton" controller="BudgetTransactionController" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+    <aura:attribute name="loading" type="Boolean" default="true" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.onRecalculateInvoice}" />
+
+    <aura:if isTrue="{!v.loading}">
+        <div class="slds-is-relative component-spinner">
+            <lightning:spinner alternativeText="Loading" size="medium" variant="brand"/>
+        </div>
+    </aura:if>
+
+</aura:component>

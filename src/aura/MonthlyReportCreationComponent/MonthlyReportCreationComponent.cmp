@@ -1,0 +1,8 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global">
+	<aura:attribute name="isSuccessful" type="Boolean" access="global" />
+	<div align="center" class="{!v.isSuccessful ? 'success text_block' : 'failure text_block'}">
+		<div style="margin: auto; display: flex">
+				{!v.isSuccessful ? $Label.c.Monthly_Report_Creation_Success : $Label.c.Monthly_Report_Creation_Failure}
+		</div>
+	</div>
+</aura:component>

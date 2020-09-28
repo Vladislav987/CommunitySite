@@ -1,0 +1,109 @@
+<!--
+ - Created by MaxymMirona on 12.03.2020.
+ -->
+
+<aura:component description="GenerateInvoiceComponent" controller="BudgetTransactionController" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="generateInvoice" type="Boolean" default="true"/>
+    <aura:attribute name="months" type="String[]"/>
+    <aura:attribute name="years" type="Integer[]"/>
+    <aura:attribute name="selectedYear" type="String" />
+    <aura:attribute name="selectedMonth" type="String" />
+    <aura:attribute
+            name="multiselectPicklistHelpText"
+            type="String"
+            default="You can select more than 1 month at a time. To show/hide the picklist click on it."
+    />
+    <aura:attribute name="isLoading" type="Boolean" />
+    <aura:attribute name="isLoadingButton" type="Boolean" />
+    <aura:attribute name="selectedMonths" type="List" />
+    <aura:attribute name="monthlyReports" type="List" />
+    <aura:attribute name="filteredMonthlyReports" type="List" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="accrualBudgetTransactionsObjectList" type="List" />
+    <aura:attribute name="accordionPicklistObject" type="Object" />
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+
+    <aura:html tag="style">
+        .slds-modal__content {
+            height: 100%!important;
+            max-height: 600px!important;
+        }
+        .slds-modal__container {
+            max-width: 70rem;
+            width: 62%;
+        }
+    </aura:html>
+
+    <aura:if isTrue="{!v.isLoading}">
+        <div class="slds-is-relative component-spinner">
+            <lightning:spinner alternativeText="Loading" size="medium" variant="brand"/>
+        </div>
+        <aura:set attribute="else">
+            <lightning:layout horizontalAlign="center" class="generate-invoice-layout slds-p-bottom_large">
+                <lightning:layoutItem class="slds-p-around_small">
+
+                    <c:MultiSelectPicklist
+                            items="{!v.months}"
+                            label="Select a month"
+                            selectedOptions="{!v.selectedMonths}"
+                            onchange="{!c.onFilterMonthlyReports}"
+                            helpText="{!v.multiselectPicklistHelpText}"
+                            aura:id="MultiselectPicklist"
+                    />
+                </lightning:layoutItem>
+
+                <lightning:layoutItem class="slds-p-around_small">
+                    <lightning:select name="year" label="Select a year" aura:id="year" value="{!v.selectedYear}" onchange="{!c.onFilterMonthlyReports}">
+                        <aura:iteration items="{!v.years}" var="year">
+                            <option text="{!year.label}" value="{!year.value}" selected="{!year.value-v.selectedYear == 0}"/>
+                        </aura:iteration>
+                    </lightning:select>
+                </lightning:layoutItem>
+            </lightning:layout>
+
+            <c:DataTable
+                    columns="{!v.columns}"
+                    data="{!v.filteredMonthlyReports}"
+                    preselectAll="true"
+                    aura:id="custom-data-table"
+                    class="custom-data-table"
+            />
+
+            <aura:if isTrue="{!v.generateInvoice}">
+                <c:Accordion
+                        aura:id="Accordion"
+                        allowMultipleSectionsOpen="true"
+                        allowCheckboxSelection="true"
+                        picklist="{!v.accordionPicklistObject}">
+                                <aura:iteration items="{!v.accrualBudgetTransactionsObjectList}" var="accrualObject" >
+                                    <c:AccordionSection label="{!accrualObject.label}" sectionId="{!accrualObject.id}">
+                                        <c:DataTable
+                                                data="{!accrualObject.reports}"
+                                    columns="{!accrualObject.columns}"
+                                    hideCheckboxColumn="true"
+                                    hideHeaderColumn="true"
+                            />
+                        </c:AccordionSection>
+                    </aura:iteration>
+                </c:Accordion>
+            </aura:if>
+
+            <lightning:button label="{!v.generateInvoice ? 'Generate Invoice' : 'Generate Accrual'}"
+                              class="slds-m-top--large slds-align_absolute-center"
+                              variant="brand"
+                              onclick="{!c.onGenerateInvoice}"
+                              disabled="{!v.isLoadingButton}"
+            />
+            <aura:if isTrue="{!v.isLoadingButton}">
+                <div class="slds-is-relative slds-p-bottom--small button-spinner">
+                    <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
+                </div>
+            </aura:if>
+        </aura:set>
+    </aura:if>
+</aura:component>

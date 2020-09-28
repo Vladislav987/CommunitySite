@@ -1,0 +1,8 @@
+/**
+ * Created by MaxymMirona on 02.06.2020.
+ */
+
+.THIS.component-spinner .slds-spinner_container {
+    top: 7rem;
+    background-color: transparent;
+}

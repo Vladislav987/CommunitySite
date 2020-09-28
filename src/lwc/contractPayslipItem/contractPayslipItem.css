@@ -1,0 +1,13 @@
+.card-title {
+    color: #00396b;
+    font-size: 1rem;
+    font-weight: 600;
+    display: inline-flex;
+}
+
+.salary-date-row {
+    color: #00396b;
+    font-size: 1rem;
+    font-weight: 500;
+    display: inline-flex;
+}

@@ -1,0 +1,51 @@
+<aura:component controller="DatedConversionRateController" implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:appHostable" >
+    <aura:attribute name="records" type="List" access="private" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" access="private" />
+    <aura:attribute name="columns" type="List" default="[{label: 'Name', fieldName: 'Name', type: 'text'}]"/>
+    <aura:attribute name="ISOCodes" type="List" />
+    <aura:attribute name="latestBlockedDate" type="Date" />
+    <aura:attribute name="latestDateUntilToday" type="Date" />
+    <aura:attribute name="blockedStartDates" type="List" />
+    <aura:attribute name="corporateISOCode" type="Object" />
+    <aura:attribute name="corporateCurrencyExchangeRate" type="Decimal" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="c:DatedConversionRateCreateNewEvent" action="{!c.doInit}" />
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <lightning:card>
+        <aura:set attribute="title">
+            Dated Exchange Rates ({!v.latestDateUntilToday} {!v.latestBlockedDate == v.latestDateUntilToday ? ' and after)' : ' to ' + v.latestBlockedDate + ')' }
+        </aura:set>
+        <p class="slds-p-around_small">Corporate Currency: {!v.corporateISOCode}, Exchange Rate: {!v.corporateCurrencyExchangeRate}</p>
+        <aura:set attribute="footer">
+            <lightning:button class="slds-align--absolute-center" variant="brand" label="New Exchange Rates" onclick="{!c.onNewExchangeRates}"/>
+        </aura:set>
+        <aura:if isTrue="{!v.isLoading}">
+            <div>
+                <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
+            </div>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!not(empty(v.records))}" >
+                    <div class="slds-scrollable_y" id="related_list">
+                        <lightning:datatable keyField="Id"
+                                             isLoading="{!v.isLoading}"
+                                             data="{!v.records}"
+                                             columns="{!v.columns}"
+                                             hideCheckboxColumn="true"
+                                             onsave="{!c.onSaveDataTable}"
+                                             draftValues="{! v.draftValues }"/>
+                    </div>
+                    <aura:set attribute="else">
+                        <div class="slds-scrollable_y slds-align_absolute-center" id="related_list_empty_message">
+                            <p>
+                                No items to display.
+                            </p>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+</aura:component>

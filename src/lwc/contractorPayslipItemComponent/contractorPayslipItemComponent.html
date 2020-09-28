@@ -1,0 +1,14 @@
+<template>
+    <div class="box slds-clearfix slds-text-color_weak slds-m-top_x-small slds-clearfix">
+        <div class="icon-container slds-align_absolute-center slds-p-horizontal_xx-small slds-float_left">&#9670;</div>
+        <div class="flex-direction-column">
+            <div class="box-row-title">{privateContractorPayslipComponent.Name}</div>
+            <div class="box-row-title" title={privateContractorPayslipComponent.Reason}>{privateContractorPayslipComponent.Reason}</div>
+        </div>
+        <lightning-formatted-number value={privateContractorPayslipComponent.Sum}
+                                    format-style="currency"
+                                    currency-code={privateContractorPayslipComponent.CurrencyIsoCode}
+                                    class={colorStyleForSum}>
+        </lightning-formatted-number>
+    </div>
+</template>

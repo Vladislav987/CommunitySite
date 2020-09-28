@@ -1,0 +1,38 @@
+.checkbox-column-size {
+    width: 1rem;
+}
+
+.deactivate-btn-p {
+    padding-top: 2rem;
+}
+
+.container {
+    margin: 8px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.centered {
+    color: #999999;
+    font-size: 0.9rem;
+    text-align: center;
+    align-self: center;
+    padding: 0 12px;
+}
+
+.reason-overflow {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 20rem;
+}

@@ -1,0 +1,147 @@
+<aura:component controller="LA_BudgetPlanningController"
+                implements="flexipage:availableForAllPageTypes"
+                access="global">
+
+    <aura:attribute name="months" type="String[]"/>
+    <aura:attribute name="headerWrapper" type="Object"/>
+    <aura:attribute name="budgetHierarchyItemList" type="List"/>
+    <aura:attribute name="changeGlobalStatus" type="Boolean" default="true"/>
+    <aura:attribute name="readOnlyAccess" type="Boolean" default="false"/>
+
+    <aura:attribute name="showDeleteConfirmPopUp" type="boolean" default="false"/>
+    <aura:attribute name="showPopUp" type="Boolean" default="false"/>
+    <aura:attribute name="textOfPopUp" type="String"/>
+    <aura:attribute name="businessUnitForShare" type="List"/>
+    <aura:attribute name="finItemsForUpdate" type="List"/>
+
+
+    <aura:attribute name="currencyValues" type="List"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="false"/>
+    <aura:attribute name="isShareActionDone" type="Boolean" default="true"/>
+    <aura:attribute name="currentForm" type="String" default="Global planning"/>
+    <aura:attribute name="currentCostCenter" type="String"/>
+    <aura:attribute name="maxVersion" type="String"/>
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:handler event="c:accessForYear" action="{!c.handleAccessForYear}"/>
+    <aura:handler event="c:updateHeaderWrapperEvent" action="{!c.handleUpdateHeaderWrapperEvent}"/>
+    <aura:handler event="c:updateCurrencyEvent" action="{!c.handleUpdateCurrencyEvent}"/>
+
+    <aura:method name="shareCostCenterMethod" action="{!c.shareCostCenterPopUp}"/>
+    <aura:method name="deleteDraft" action="{!c.deleteDraftAction}"/>
+
+    <div class="header">
+        <c:HeaderOfFinReport aura:id="headerComponent"
+                             changeGlobalStatus="{!v.changeGlobalStatus}"
+                             headerWrapper="{#v.headerWrapper}"
+                             currentForm="{!v.currentForm}"
+                             currentBusinessUnit="{!v.currentCostCenter}"
+                             showSpinner="{!v.showSpinner}"
+                             maxVersion="{!v.maxVersion}"
+                             isShareActionDone="{!v.isShareActionDone}"/>
+    </div>
+    <aura:if isTrue="{!v.isShareActionDone}">
+        <div class="tableBody">
+            <div class="cost">
+                <aura:if isTrue="{!v.showSpinner}">
+                    <div class="slds-box slds-theme_default slds-size--1-of-5">
+                        <div class="monthHeader slds-theme_default">
+                            <div class="months ">
+                                <c:BP_Month months="{!v.months}"/>
+                            </div>
+                        </div>
+                        <c:BP_BudgetHierarchy budgetHierarchyItemList="{!v.budgetHierarchyItemList}"
+                                              currencyValues="{!v.currencyValues}"
+                                              currentForm="{!v.currentForm}"
+                                              readOnlyAccess="{!v.readOnlyAccess}"
+                                              finItemsForUpdate="{!v.finItemsForUpdate}"/>
+                        <aura:if isTrue="{!v.currentForm == 'Global planning'}">
+                            <div class="bottom"
+                                 style="{!if(v.headerWrapper.selectedVersion == 'Draft','','display:none;')}">
+                                <lightning:buttonGroup aura:id="bottomButtons">
+                                    <button class="slds-button slds-button_outline-brand" onclick="{!c.shareButton}"
+                                            disabled="{!v.readOnlyAccess}">Share with Cost Centers
+                                    </button>
+                                    <button class="slds-button slds-button_outline-brand" onclick="{!c.saveButton}"
+                                            disabled="{!v.readOnlyAccess}">Save Cost Center Draft
+                                    </button>
+                                    <button class="slds-button slds-button_outline-brand" onclick="{!c.deleteButton}">
+                                        Delete
+                                        Cost Center Draft
+                                    </button>
+                                </lightning:buttonGroup>
+                            </div>
+
+                            <div class="bottom"
+                                 style="{!if(v.headerWrapper.versionsList[0] == 'Draft','display:none;',if(v.headerWrapper.selectedVersion != 'Shared',if(v.headerWrapper.selectedVersion lt v.maxVersion,'display:none;',''),''))}">
+                                <lightning:buttonGroup aura:id="shareBottom">
+                                    <button class="slds-button slds-button_outline-brand shareButton"
+                                            onclick="{!c.editButtonAction}">
+                                        Edit
+                                    </button>
+                                </lightning:buttonGroup>
+                            </div>
+                            <aura:set attribute="else">
+                                <div class="bottom"
+                                     style="{!if(v.headerWrapper.selectedVersion == 'Draft','','display:none;')}">
+                                    <lightning:buttonGroup aura:id="bottomButtons">
+                                        <button class="slds-button slds-button_outline-brand" onclick="{!c.generateButton}"
+                                                disabled="{!v.readOnlyAccess}">Generate version
+                                        </button>
+                                        <button class="slds-button slds-button_outline-brand" onclick="{!c.saveButton}"
+                                                disabled="{!v.readOnlyAccess}">Save Cost Center Draft
+                                        </button>
+                                        <button class="slds-button slds-button_outline-brand" onclick="{!c.deleteButton}">
+                                            Delete Cost Center Draft
+                                        </button>
+                                    </lightning:buttonGroup>
+                                </div>
+
+                                <div class="bottom"
+                                     style="{!if(v.headerWrapper.versionsList[0] != 'Draft',if(v.headerWrapper.selectedVersion lt v.maxVersion,'display:none;',''),'display:none;')}">
+                                    <lightning:buttonGroup aura:id="shareBottom">
+                                        <button class="slds-button slds-button_outline-brand shareButton"
+                                                onclick="{!c.editButtonAction}">
+                                            Edit
+                                        </button>
+                                    </lightning:buttonGroup>
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                    <aura:set attribute="else">
+                        <lightning:spinner alternativeText="Loading" size="large"/>
+                    </aura:set>
+                </aura:if>
+                <div  class="chatterIcon">
+                    <lightning:buttonIcon iconName="utility:share_post"
+                                          size="large"
+                                          variant="container"
+                                          alternativeText="Chat"
+                                          title="Chat"
+                                          onclick="{!c.openForm}"/>
+                </div>
+                <div id="chatForm" class="chatter-popup">
+                    <c:BP_Chatter/>
+                </div>
+            </div>
+
+        </div>
+        <aura:if isTrue="{!v.showPopUp}">
+            <c:modalBoxShareAction showPopUp="{!v.showPopUp}" textOfPopUp="{!v.textOfPopUp}" parent="{! this }"/>
+        </aura:if>
+        <aura:if isTrue="{!v.showDeleteConfirmPopUp}">
+            <c:modalBoxDeleteAction parent="{!this}" showDeleteConfirmPopUp="{!v.showDeleteConfirmPopUp}"/>
+        </aura:if>
+        <aura:set attribute="else">
+            <div class="slds-box slds-theme_default">
+                Share cost center in process, you will be notified via email when it finished
+            </div>
+        </aura:set>
+
+    </aura:if>
+
+
+</aura:component>

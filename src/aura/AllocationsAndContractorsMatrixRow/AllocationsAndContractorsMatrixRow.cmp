@@ -1,0 +1,67 @@
+<!--
+ - Created by MaxymMirona on 14.01.2020.
+ -->
+
+<aura:component controller="AllocationController" description="MatrixAllocationAndContractorsCell">
+    <aura:attribute name="selectedContractorId" type="Contractor__c" />
+    <aura:attribute name="projects" type="List" />
+    <aura:attribute name="allocations" type="List" />
+    <aura:attribute name="allocationsByProjectIds" type="List" />
+    <aura:attribute name="allocationsByContractorIds" type="List" />
+    <aura:attribute name="type" type="String" />
+    <aura:attribute name="totalAmount" type="Integer" default="0"/>
+    <aura:attribute name="newTotalAmount" type="Integer" default="0"/>
+    <aura:attribute name="approveRequired" type="Boolean"/>
+    <aura:attribute name="allocationsToSaveAndApprove" type="List" />
+    <aura:attribute name="allocationsToSave" type="List" />
+    <aura:attribute name="sentToApprove" type="Boolean" default="false"/>
+    <aura:attribute name="isLoading" type="Boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInitRow}" />
+
+    <aura:registerEvent name="sendApproveRequiredToParent" type="c:AllocationsAndContractorsMatrixSendAppr"/>
+
+    <aura:iteration items="{!v.allocations}" var="allocation">
+        <td class="slds-text-align_center" id="percent_input">
+            <lightning:input type="number"
+                             name="{!'{&quot;Project__c&quot; : &quot;' + allocation.Project__c + '&quot;, &quot;Id&quot; : &quot;' + allocation.Id + '&quot;'}"
+                             formatter="percent-fixed"
+                             value="{! if(and(allocation.New_Allocation__c != null, allocation.Status__c == 'Pending'), allocation.New_Allocation__c, allocation.Allocation__c)}"
+                             onchange="{!c.doChangeAllocationPercent}"
+                             disabled="{!v.sentToApprove}"
+                             class="input-allocation__c"
+                             aura:id="allocationPercent"
+                             maxlength="3"
+                             variant="label-hidden"
+            />
+        </td>
+    </aura:iteration>
+
+    <td class="slds-text-align_center slds-p-around_small">
+        <lightning:formattedText value="{!v.totalAmount + '% / ' + v.newTotalAmount + '%'}" style="percent" maximumFractionDigits="0"/>
+    </td>
+
+    <aura:if isTrue="{!!v.sentToApprove || v.isLoading}">
+        <td class="slds-text-align_center slds-p-around_small">
+            <lightning:button variant="success"
+                              label="Approve"
+                              disabled="{!!v.approveRequired || v.isLoading}"
+                              onclick="{!c.doApprove}"
+            />
+            <aura:if isTrue="{!v.isLoading}">
+                <div>
+                    <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
+                </div>
+            </aura:if>
+        </td>
+        <aura:set attribute="else">
+            <td class="slds-text-align_center slds-p-around_small">
+                <lightning:button variant="success"
+                                  label="Sent to approve"
+                                  disabled="true"
+                />
+            </td>
+        </aura:set>
+    </aura:if>
+
+</aura:component>

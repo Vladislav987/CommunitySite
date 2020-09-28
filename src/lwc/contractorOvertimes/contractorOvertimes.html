@@ -1,0 +1,22 @@
+<template>
+    <div class="slds-align_absolute-center flex-direction-column">
+        <template if:true={isEmptyOvertimes}>
+            You have no overtimes
+        </template>
+
+        <template if:false={isEmptyOvertimes}>
+            <lightning-combobox if:true={years}
+                                label="Year"
+                                value={selectedYear}
+                                placeholder="Select a year"
+                                options={years}
+                                onchange={changeYear}>
+            </lightning-combobox>
+            <div class="slds-grid slds-col slds-size_1-of-1 slds-medium-size_3-of-4 slds-align_absolute-center flex-direction-column" if:true={overtimesForCurrentYear}>
+                <template for:each={overtimesForCurrentYear} for:item="overtimeForCurrentYear">
+                    <c-contractor-overtimes-item key={overtimeForCurrentYear.Id} overtime-for-current-year={overtimeForCurrentYear}></c-contractor-overtimes-item>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

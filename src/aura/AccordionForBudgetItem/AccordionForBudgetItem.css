@@ -1,0 +1,55 @@
+.THIS .finReport {
+    display: flex;
+    width: 85%;
+}
+
+.THIS .budgetType {
+    display: flex;
+    width:15%;
+}
+.THIS .budgetElement {
+    display:flex;
+}
+.THIS .cost .slds-box {
+    padding: 10px 0px 10px 0px;
+}
+
+.THIS .greyInput .slds-input {
+    background-color: #E1DFDF;
+    text-align: center;
+}
+
+
+.THIS .flexipageAppHomeTemplateTwoColumns {
+    display: flex;
+}
+
+.THIS .greyInput {
+    position: relative;
+    top: 25%;
+}
+
+.THIS .whiteInput {
+    position: relative;
+    top: 25%;
+}
+
+.THIS .input {
+    border:1px double #ada3a3
+}
+
+.THIS .currency {
+    position: relative;
+    left: 37%;
+    width: 30%;
+    height: 50%;
+}
+
+.THIS .slds-is-open {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.THIS .slds-accordion__summary-action {
+    padding-left:20px;
+}

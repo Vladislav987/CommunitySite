@@ -1,0 +1,19 @@
+/**
+ * Created by MaxymMirona on 12.03.2020.
+ */
+
+.THIS.button-spinner .slds-spinner_container {
+    top : -43px;
+    background-color: transparent;
+}
+
+.THIS.component-spinner .slds-spinner_container {
+    top: 250px;
+    background-color: transparent;
+}
+
+.THIS.custom-data-table {
+    min-height: 7rem;
+    height: auto;
+    max-height: 16rem;
+}

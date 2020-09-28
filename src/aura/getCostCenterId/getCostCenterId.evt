@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="getCostCenterId">
+    <aura:attribute name="costCenterId" type="String"/>
+</aura:event>

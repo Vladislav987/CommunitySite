@@ -1,0 +1,31 @@
+public with sharing class LA_BP_Constants {
+    public static final String COST_CENTER_PLANNING = 'Cost Centers Planning';
+    public static final String COST_CENTER_GROUP = 'BudgetPlanning CostCenter';
+    public static final String GLOBAL_GROUP = 'BudgetPlanning Global';
+    public static final String GLOBAL_PLANNING = 'Global planning';
+    public static final String GLOBAL_RECORD_TYPE = 'Global';
+    public static final String GLOBAL_STATUS_FIELD = 'GlobalStatus__c';
+    public static final String COST_CENTER_STATUS_FIELD = 'Status__c';
+    public static final String COST_CENTER_NAME = 'csName';
+    public static final String COST_CENTER_RECORD_TYPE = 'Cost_Center';
+    public static final String MASTER_RECORD_TYPE = 'AAA';
+    public static final String DRAFT = 'Draft';
+    public static final String DUMMY = 'Dummy';
+    public static final String SHARED = 'Shared';
+    public static final String AUTO_COPY = 'AutoCopy';
+    public static final String GENERATED = 'Generated';
+    public static final String GENERATED_VERSION = 'Generated v.';
+    public static final Integer JULY_MONTH = 7;
+    public static final Integer JANUARY_MONTH = 1;
+    public static final Integer DECEMBER_MONTH = 12;
+    public static final Integer FIRST_DAY_OF_MONTH = 1;
+    public static final Integer LAST_DAY_OF_DECEMBER = 31;
+    public static final String SENTENCE_FOR_BU_LESS_THEN_TEN = 'Are you sure you want to share data for Cost Centers: (';
+    public static final String SENTENCE_FOR_BU_HIGHER_THEN_TEN = 'Are you sure you want to share data for ';
+    public static final String MONEY = 'Money';
+    public static final String DELETE_OPERATION = 'Delete';
+    public static final String INSERT_OPERATION = 'Insert';
+    public static final String UPDATE_OPERATION = 'Update';
+    public static final String NAME_OF_EMAIL_TEMPLATE_FOR_SHARE = 'Notification_To_Global_Cost_Centers_About_Finished_Sharing';
+    public static final String NAME_OF_APEX_CLASS_FOR_SHARE = 'LA_BP_ShareCostCenterBatch';
+}

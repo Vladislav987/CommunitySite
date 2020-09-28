@@ -1,0 +1,13 @@
+.slds-card__header{
+    background-color: #f3f2f2;
+    padding-bottom: 0.5rem;
+}
+:host .inner-block{
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    margin: auto;
+    padding: 1%;
+    background-color: #ffffff;
+    /*border: 1px solid black;*/
+
+}

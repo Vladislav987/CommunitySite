@@ -1,0 +1,91 @@
+<aura:component description="MassTransferOfAllocationsFromOpportunity" controller="LA_MassTransferOfAllocationsController"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+    <aura:attribute name="projects" type="Project__c[]"/>
+    <aura:attribute name="selectedProjectId" type="Id"/>
+    <aura:attribute name="recordId" type="String" />
+
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="allocations" type="Allocation__c[]"/>
+    <aura:attribute name="selectedRows" type="List" />
+    <aura:attribute name="showStep" type="Boolean" default="true"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="true"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:html tag="style">
+        .slds-modal__container {
+        width: 70%;
+        max-width: 90rem;
+        }
+    </aura:html>
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+
+
+    <aura:if isTrue="{!v.showSpinner}">
+        <div class="slds-spinner_container slds-is-relative" style="position: fixed" >
+            <lightning:spinner alternativeText="Loading" size="medium" variant="brand"/>
+        </div>
+        <aura:set attribute="else">
+            <lightning:card>
+                <aura:set attribute="title">
+                    <lightning:icon iconName="utility:record_update" size="small"/>
+                    Mass transfer of Allocations
+                </aura:set>
+
+                <div class="slds-box">
+                    <lightning:layout >
+                        <lightning:layoutItem  class="slds-p-around_medium" size="6">
+                            <lightning:select aura:id="select" label="Select a project" required="true">
+                                <option value="choose">choose  one...</option>
+                                <aura:iteration items="{!v.projects}" var="project">
+                                    <option value="{!project.Id}">{!project.Name}</option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </lightning:layoutItem>
+
+                        <aura:if isTrue="{!v.showStep}">
+                        <lightning:layoutItem  class="slds-p-around_medium" size="6">
+                            <lightning:select aura:id="answer" label="What do you want to do with unselected allocations?">
+                                <option value="choose">choose one...</option>
+                                <option value="false">Skip</option>
+                                <option value="true">Reject</option>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        </aura:if>
+
+                    </lightning:layout>
+
+                    <div class="slds-box_border">
+                        <lightning:card>
+                            <aura:set attribute="title">
+                                <lightning:icon iconName="utility:touch_action" size="small"/>
+                                Select allocations to transfer
+                            </aura:set>
+
+                            <div style="height: 200px">
+                                <lightning:datatable
+                                    aura:id="dataTable"
+                                    data="{!v.allocations }"
+                                    columns="{! v.columns }"
+                                    selectedRows="{!v.selectedRows}"
+                                    keyField="id"
+                                    onrowselection="{! c.handleRowAction }"/>
+                            </div>
+                        </lightning:card>
+                    </div>
+                </div>
+
+                <div class="slds-align--absolute-center">
+                    <lightning:button label="Transfer Allocations"
+                                      class="slds-m-top_xx-small"
+                                      variant="brand"
+                                      onclick="{!c.onTransferAllocations1}" />
+                </div>
+            </lightning:card>
+        </aura:set>
+    </aura:if>
+
+</aura:component>

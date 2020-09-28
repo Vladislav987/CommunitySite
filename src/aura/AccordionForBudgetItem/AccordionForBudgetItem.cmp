@@ -1,0 +1,65 @@
+<aura:component description="AccordionForBudgetItem">
+    <aura:attribute name="budgetHierarchyItemList" type="List"/>
+    <aura:attribute name="access" type="Boolean" />
+    <aura:attribute name="currencyValues" type="List"/>
+    <aura:attribute name="finItemsForUpdate" type="List"/>
+    <aura:attribute name="currentForm" type="String" default="Global planning"/>
+
+    <aura:registerEvent name="updateCurrencyEvent" type="c:updateCurrencyEvent" />
+
+
+    <lightning:accordion allowMultipleSectionsOpen="true">
+        <aura:iteration aura:id='auraId' items="{!v.budgetHierarchyItemList}" var="item" indexVar="indexVar">
+            <aura:if isTrue="{!empty(item.budgetHierarchyItems)}">
+                <div class="budgetElement">
+                    <div class="budgetType">
+                        <div class="slds-box slds-theme_default ">
+                            {!item.budgetElement.Name}
+                            <div class="currency">
+                                <lightning:select aura:id="currency"
+                                                  name="{!item}"
+                                                  onchange="{!c.changeCurrency}"
+                                                  disabled="{!if (v.access,true,if(v.currentForm != 'Global planning',if (item.budgetElement.RecordType.DeveloperName == 'Global',true,false),false))}">
+
+                                    <aura:iteration items="{!v.currencyValues}" var="currencyValue" >
+                                        <option text="{!currencyValue}" selected="{!currencyValue == item.financialReportItems[0].CurrencyIsoCode}" value="{!currencyValue}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="finReport" >
+                        <aura:iteration items="{!item.financialReportItems}" var="fir" indexVar="index">
+                            <div class="slds-box slds-theme_default input" style="{!if(index%2 == 0,'background-color:#E1DFDF','background-color:white')}">
+                                <lightning:input class="{!if(index%2 == 0,'greyInput','whiteInput')}"
+                                        name="{!fir}"
+                                        type="number"
+                                        formatter="decimal"
+                                        variant="label-hidden"
+                                        disabled="{!if (v.access,true,if(v.currentForm != 'Global planning',if (item.budgetElement.RecordType.DeveloperName == 'Global',true,false),false))}"
+                                        value="{!fir.Sum__c}"
+                                        step="1"
+                                        maxlength="8"
+                                        onchange="{!c.changeColor}"
+                                        style="{!if(fir.Previous_Financial_Report_Item__c != null,if(fir.Sum__c > fir.Previous_Financial_Report_Item__r.Sum__c,'color:red',if(fir.Sum__c == fir.Previous_Financial_Report_Item__r.Sum__c,'color:black','color:green')),'color:black')}">
+                                </lightning:input>
+                            </div>
+                        </aura:iteration>
+                    </div>
+                </div>
+                <aura:set attribute="else">
+                    <lightning:accordionSection name="{!item.budgetElement.Name}" label="{!item.budgetElement.Name}">
+                        <c:AccordionForBudgetItem budgetHierarchyItemList="{!item.budgetHierarchyItems}"
+                                                  access="{!v.access}"
+                                                  currencyValues="{!v.currencyValues}"
+                                                  currentForm="{!v.currentForm}"
+                                                  finItemsForUpdate="{!v.finItemsForUpdate}"/>
+                    </lightning:accordionSection>
+                </aura:set>
+            </aura:if>
+        </aura:iteration>
+
+    </lightning:accordion>
+
+</aura:component>

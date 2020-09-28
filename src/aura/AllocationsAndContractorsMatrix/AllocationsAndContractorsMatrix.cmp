@@ -1,0 +1,138 @@
+<!--
+ - Created by MaxymMirona on 28.01.2020.
+ -->
+
+<aura:component controller="AllocationController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" >
+    <aura:attribute name="types" type="String[]" access="private"/>
+    <aura:attribute name="selectedType" type="String" access="private" />
+    <aura:attribute name="selectedContractorId" type="Id" access="private" />
+    <aura:attribute name="filteredRecords" type="List" access="private" />
+    <aura:attribute name="allocationsToIterate" type="List" access="private" />
+    <aura:attribute name="filteredAllocations" type="List" access="private" />
+    <aura:attribute name="records" type="List" access="private" />
+    <aura:attribute name="isLoading" type="Boolean" default="true" access="private" />
+    <aura:attribute name="contractors" type="List" />
+    <aura:attribute name="childProjects" type="List" />
+    <aura:attribute name="parentProject" type="Object" />
+    <aura:attribute name="allocationsByContractorIds" type="List" />
+    <aura:attribute name="approveRequired" type="Boolean"/>
+    <aura:attribute name="allIsValid" type="Boolean" default="true"/>
+    <aura:attribute name="approveRequiredList" type="List"/>
+    <aura:attribute name="showSaveButton" type="Boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler
+            name="sendApproveRequiredToParent"
+            event="c:AllocationsAndContractorsMatrixSendAppr"
+            action="{!c.handleSendApproveRequiredToParent}"/>
+
+    <lightning:card>
+        <aura:set attribute="title">
+            <div class="slds-icon_container slds-icon-custom-2">
+                <lightning:icon iconName="custom:custom2" size="small"/>
+            </div>
+            Allocation and Contractors
+        </aura:set>
+        <lightning:layout horizontalAlign="center" verticalAlign="end">
+            <lightning:layoutItem class="slds-p-around_small">
+                <lightning:select name="Type" label="Type" aura:id="type" value="{!v.selectedType}" onchange="{!c.doInitMatrixOnly}">
+                    <aura:iteration items="{!v.types}" var="type">
+                        <option text="{!type.label}" value="{!type.id}" selected="{!type.label==v.selectedType}"/>
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem class="slds-p-around_small">
+                <lightning:select name="Contractor" label="Contractor" aura:id="contractor" value="{!v.selectedContractorId}" onchange="{!c.doInitMatrixOnly}">
+                    <aura:iteration items="{!v.contractors}" var="contractor">
+                        <option text="{!contractor.Name}" value="{!contractor.Id}" selected="{!contractor.Id == v.selectedContractor}"/>
+                    </aura:iteration>
+                </lightning:select>
+            </lightning:layoutItem>
+        </lightning:layout>
+        <aura:if isTrue="{!v.isLoading}">
+            <div>
+                <lightning:spinner alternativeText="Loading" size="small" variant="brand"/>
+            </div>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!not(empty(v.allocationsToIterate))}" >
+                    <div class="slds-scrollable" id="related_list">
+
+                        <div class="container">
+                            <table class="slds-table slds-table--bordered slds-table--col-bordered slds-box--border">
+
+                                <thead>
+                                    <tr class="slds-text-heading--small">
+                                        <th scope="col" class="slds-size--1-of-12"></th>
+                                        <aura:iteration items="{!v.childProjects}" var="childProject">
+                                            <th scope="col" class="cell slds-text-align_center slds-size--2-of-12">{!childProject.Name}</th>
+                                        </aura:iteration>
+                                        <th scope="col" class="cell slds-text-align_center slds-size--1-of-12">Total/New</th>
+                                        <th scope="col" class="cell slds-text-align_center slds-size--2-of-12">Approve</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <aura:iteration items="{!v.allocationsToIterate}" var="allocationGroup">
+                                        <tr>
+                                            <th id="percent_input_header">
+                                                {!allocationGroup[0].Contractor__r.Name}
+                                                <p>
+                                                    Resource Type:
+                                                    <lightning:formattedText value="{!allocationGroup[0].Resource_Type__c}" />
+                                                </p>
+                                                <p>
+                                                    Expected Rate:
+                                                    <lightning:formattedNumber
+                                                            style="currency"
+                                                            value="{!allocationGroup[0].Expected_Rate__c}"
+                                                            maximumFractionDigits="2"
+                                                            currencyCode="{!allocationGroup[0].CurrencyIsoCode}"
+                                                            currencyDisplayAs="code"
+                                                    />
+                                                </p>
+                                            </th>
+                                            <c:AllocationsAndContractorsMatrixRow projects="{!v.childProjects}"
+                                                                                  allocationsByContractorIds="{!allocationGroup}"
+                                                                                  type="{!v.selectedType}"
+                                                                                  selectedContractorId="{!v.selectedContractorId}"
+                                                                                  aura:id="MatrixRowComponent"
+                                            />
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+
+                            <aura:if isTrue="{!v.showSaveButton}">
+                                <lightning:layout horizontalAlign="center" verticalAlign="end">
+                                    <lightning:layoutItem class="slds-p-top--medium">
+                                        <lightning:button variant="success"
+                                                          label="Save"
+                                                          disabled="{!if(!v.allIsValid, true, v.approveRequired)}"
+                                                          onclick="{!c.doSave}"
+                                        />
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem class="slds-p-top--medium slds-p-left--medium">
+                                        <lightning:button variant="success"
+                                                          label="Approve all"
+                                                          disabled="{!if(!v.allIsValid, true, !v.approveRequired)}"
+                                                          onclick="{!c.doApproveAll}"
+                                        />
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </aura:if>
+                        </div>
+
+                    </div>
+                    <aura:set attribute="else">
+                        <div class="slds-align_absolute-center" id="related_list_empty_message">
+                            <p>
+                                You have no active Allocations or Contractors associated with Allocations.
+                            </p>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </aura:set>
+        </aura:if>
+    </lightning:card>
+</aura:component>

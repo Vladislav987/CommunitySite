@@ -1,0 +1,290 @@
+<!--
+Created by Ponomarov Vladyslav on 04.05.2020.
+-->
+<aura:component description="MonthlyReportsGenerator" controller="LA_MonthlyReportGeneratorController"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+
+    <aura:attribute name="months" type="String[]"/>
+    <aura:attribute name="years" type="Integer[]"/>
+    <aura:attribute name="allocations" type="Allocation__c[]"/>
+    <aura:attribute name="allocationTypes" type="String[]"/>
+    <aura:attribute name="filteredAllocations" type="Allocation__c[]"/>
+    <aura:attribute name="isLoading" type="Boolean" access="private" default="true"/>
+    <aura:attribute name="haveActiveFilter" type="Boolean" access="private" default="true"/>
+    <aura:attribute name="selectedType" type="String"/>
+    <aura:attribute name="selectedYear" type="String"/>
+    <aura:attribute name="selectedMonth" type="String"/>
+
+    <aura:attribute name="progressIndicatorFlag" type="String" default="1"/>
+    <aura:attribute name="allocationsIds" type="String[]"/>
+    <aura:attribute name="numbers" type="Integer[]"/>
+    <aura:attribute name="allocationsWithoutReports" type="Allocation__c[]"/>
+    <aura:attribute name="allocationsWithOneReport" type="Allocation__c[]"/>
+    <aura:attribute name="allocationsWithMultipleReports" type="Allocation__c[]"/>
+    <aura:attribute name="allocationsWithBudgetTransactions" type="Allocation__c[]"/>
+    <aura:attribute name="segment" type="Integer" default="0"/>
+    <aura:attribute name="isChanged" type="Boolean" default="true"/>
+    <aura:attribute name="isChecked" type="Boolean" default="true"/>
+    <aura:attribute name="selectedAllocationsWithoutReports" type="String[]"/>
+    <aura:attribute name="selectedAllocationsWithOneReports" type="String[]"/>
+    <aura:attribute name="selectedAllocationsPageOne" type="String[]"/>
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+
+    <aura:registerEvent name="GenerateMonthlyReportEvent" type="c:GenerateMonthlyReportEvent"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:html tag="style">
+        .slds-modal__container {
+        width: 70%;
+        max-width: 90rem;
+        }
+    </aura:html>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+
+    <lightning:progressIndicator type="base" currentStep="{!v.progressIndicatorFlag}">
+        <lightning:progressStep label="Step 1" value="1"/>
+        <lightning:progressStep label="Step 2" value="2"/>
+    </lightning:progressIndicator>
+
+    <div class="slds-is-relative">
+        <aura:if isTrue="{!v.isLoading}">
+            <lightning:spinner/>
+        </aura:if>
+
+        <div aura:id="stepOne">
+            <lightning:card>
+                <aura:set attribute="title">
+                    <lightning:icon iconName="utility:connected_apps" size="small"/>
+                    Report Generator
+                </aura:set>
+
+
+                <aura:set attribute="footer">
+                    <aura:if isTrue="{!v.filteredAllocations.length > 0}">
+                        <lightning:button label="Next Step"
+                                          class="slds-m-top_xx-small"
+                                          variant="brand"
+                                          onclick="{!c.goToStepTwo}"/>
+                    </aura:if>
+                </aura:set>
+
+
+                <lightning:layout>
+                    <lightning:layoutItem class="slds-p-around_medium" size="4">
+                        <lightning:select aura:id="select" label="Select a month" required="true"
+                                          onchange="{!c.onAllocationFilter}" value="{!v.selectedMonth}">
+                            <option value="{!month}">choose one...</option>
+                            <aura:iteration items="{!v.months}" var="month">
+                                <option value="{!month}">{!month}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem class="slds-p-around_medium" size="4">
+                        <lightning:select aura:id="selectYear" label="Select a year" required="true"
+                                          onchange="{!c.onAllocationFilter}" value="{!v.selectedYear}">
+                            <option value="{!month}">choose one...</option>
+                            <aura:iteration items="{!v.years}" var="year">
+                                <option value="{!v.year}">{!year}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem class="slds-p-around_medium" size="4">
+                        <lightning:select aura:id="selectAllocationType" label="Select Allocation Type" required="false"
+                                          onchange="{!c.onAllocationFilter}" value="{!v.selectedType}">
+                            <option value="{!month}">choose one...</option>
+                            <aura:iteration items="{!v.allocationTypes}" var="allocation">
+                                <option value="{!allocation}">{!allocation}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                </lightning:layout>
+
+
+                <aura:if isTrue="{!v.filteredAllocations.length > 0}">
+                    <c:CustomTableForAllocations aura:id="firstTable"
+                                                 readOnly="false"
+                                                 checked="false"
+                                                 allocations="{!v.filteredAllocations}"
+                                                 selectedAllocations="{!v.selectedAllocationsPageOne}"/>
+                    <aura:set attribute="else">
+                        <div class="slds-align_absolute-center">
+                        You don`t have any allocation in this period.
+                        </div>
+                    </aura:set>
+                </aura:if>
+
+            </lightning:card>
+        </div>
+        <div aura:id="stepTwo1">
+            <lightning:card>
+                <div class="slds-page-header__row slds-border_bottom slds-p-bottom_large"
+                     style="border-bottom-width: 3px;">
+                    <div class="slds-page-header__name">
+                        <div class="slds-text-heading--medium tabs-font-weight">
+                            Information about selected Allocations and Monthly Reports that have been made previously.
+                        </div>
+                    </div>
+                </div>
+                <aura:set attribute="footer">
+                    <lightning:button label="Previous Step"
+                                      class="slds-m-top_xx-small"
+                                      variant="brand"
+                                      onclick="{!c.goToStepOne}"/>
+                    <lightning:button label="Create reports"
+                                      class="slds-m-top_xx-small"
+                                      variant="brand"
+                                      onclick="{!c.tryToCreateReports}"/>
+
+                </aura:set>
+                <div class="slds-border_bottom slds-p-bottom_x-large" style="border-bottom-width: 3px;">
+
+                    <aura:if isTrue="{!v.allocationsWithoutReports.length > 0}">
+                        <c:CustomTableForAllocations readOnly="false"
+                                                     tableName="Allocations without Any Reports:"
+                                                     checked="true"
+                                                     selectedAllocations="{!v.selectedAllocationsWithoutReports}"
+                                                     allocations="{!v.allocationsWithoutReports}"/>
+
+                    </aura:if>
+                    <aura:if isTrue="{!v.allocationsWithOneReport.length > 0}">
+                        <c:CustomTableForAllocations aura:id="table"
+                                                     readOnly="{!v.isChanged}"
+                                                     tableName="Allocations which already have One Report:"
+                                                     checked="false"
+                                                     selectedAllocations="{!v.selectedAllocationsWithOneReports}"
+                                                     allocations="{!v.allocationsWithOneReport}"
+                                                     helpText="You cannot generate report for a full month because these allocations already have Reports.
+                                                       But if you want to divide reports into Several periods then first you should choose how many
+                                                       segments you want to divide the reports and then you can choose allocations from this table.
+                                                       Also, you should understand that if you want to divide then the old Monthly report will delete."/>
+
+                    </aura:if>
+                    <aura:if isTrue="{!v.allocationsWithMultipleReports.length > 0}">
+                        <c:CustomTableForAllocations readOnly="true"
+                                                     tableName="Allocations with Multiple Reports (you can`t choose any allocations from this table):"
+                                                     checked="false"
+                                                     allocations="{!v.allocationsWithMultipleReports}"
+                                                     helpText="You cannot make new reports on allocations that already have multiple reports in the selected month!"/>
+
+
+                    </aura:if>
+                    <aura:if isTrue="{!v.allocationsWithBudgetTransactions.length > 0}">
+                        <c:CustomTableForAllocations readOnly="true"
+                                                     tableName="Allocations with Monthly Reports which are using in any Budget Transactions (you can`t choose any allocations from this table):"
+                                                     checked="false"
+                                                     allocations="{!v.allocationsWithBudgetTransactions}"
+                                                     helpText="You cannot make new reports on allocations that already have reports which are using in any Budget Transactions!"/>
+
+
+                    </aura:if>
+                </div>
+                <lightning:layout class="slds-p-top_x-large " multipleRows="true">
+                    <lightning:layoutItem size="4">
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="4" class="slds-align_absolute-center">
+                        <label class="slds-form-element__label" style="margin-right: 0.5rem;">Choose how many segments
+                            to
+                            divide the report</label>
+                        <lightning:helptext class="customIcon"
+                                            content="If you want to create a report for the whole month, leave the value 1.
+                            If you want to split the monthly report into several, then choose how many parts to divide it into."
+                        />
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="4">
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="4">
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="4">
+                        <lightning:select aura:id="selectNumber" onchange="{!c.changeSegmentValue}">
+                            <option value="1">1</option>
+                            <aura:iteration items="{!v.numbers}" var="number">
+                                <option value="{!v.number}">{!number}</option>
+                            </aura:iteration>
+                        </lightning:select>
+
+                    </lightning:layoutItem>
+
+                </lightning:layout>
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12" class="{!v.segment >= '2' ? 'slds-show' : 'slds-hide'}">
+                        <h2 class="header slds-p-top_x-large">Select the end day of each segments:
+                            <lightning:helptext class="customIcon"
+                                                content="If you want to create a report for the whole month,
+                                                leave 1 in field «Choose how many segments to divide the report».
+                                                Example: You want to split the report into 2 parts. You need to
+                                                choose a report end date in field «End of the first segment».
+                                                For instance, it is August and you have chosen 15th August as
+                                                End date of the first segment. After generation, 2 reports will
+                                                be created for selected Allocations. First report will be from 1 to 15 August,
+                                                second – from 16 to 31 August."
+                            />
+                        </h2>
+
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="3" padding="around-small" flexibility="auto"
+                                          class="{!v.segment >= '2' ? 'slds-show' : 'slds-hide'}">
+                        <lightning:input type="date" aura:id="input1" label="End of the first segment"
+                                         onchange="{!c.checkSelectedDay}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="3" padding="around-small" flexibility="auto"
+                                          class="{!v.segment >= '3' ? 'slds-show' : 'slds-hide'}">
+                        <lightning:input type="date" aura:id="input2" name="input5" label="End of the second segment"
+                                         required="true" onchange="{!c.checkSelectedDay}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="3" padding="around-small" flexibility="auto"
+                                          class="{!v.segment >= '4' ? 'slds-show' : 'slds-hide'}">
+                        <lightning:input type="date" aura:id="input3" name="input5" label="End of the third segment"
+                                         required="true" onchange="{!c.checkSelectedDay}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="3" padding="around-small" flexibility="auto"
+                                          class="{!v.segment >= '5' ? 'slds-show' : 'slds-hide'}">
+                        <lightning:input type="date" aura:id="input4" name="input5" label="End of the fourth segment"
+                                         required="true" onchange="{!c.checkSelectedDay}"/>
+                    </lightning:layoutItem>
+                </lightning:layout>
+
+
+            </lightning:card>
+        </div>
+    </div>
+
+    <div class="slds-m-around_xx-large">
+        <aura:if isTrue="{!v.isModalOpen}">
+
+            <!-- Modal/Popup Box starts here-->
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box Header Starts here-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Confirm please</h2>
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <p><b>You want to create multiple reports for allocations for which there is already a report for the whole month.
+                                If confirmed, the old report with all the data entered will be deleted. Want to continue?
+                            </b>
+                        </p>
+                    </div>
+                    <!--Modal/Popup Box Footer Starts here-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeModel }"/>
+                        <lightning:button variant="brand"
+                                          label="OK"
+                                          title="OK"
+                                          onclick="{!c.submitDetails}"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+    </div>
+</aura:component>

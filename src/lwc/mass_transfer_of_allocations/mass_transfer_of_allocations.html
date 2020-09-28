@@ -1,0 +1,66 @@
+<!--
+ - Created by Ponomarov Vladyslav on 01.06.2020.
+ -->
+
+<!-- Mass Transfer Of Allocations -->
+<template>
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+
+    <lightning-card title='Mass transfer of Allocations' icon-name="utility:record_update">
+        <lightning-layout>
+            <lightning-layout-item padding="around-medium" size="6">
+                <lightning-combobox
+                        name="Select a project"
+                        label="Select a project"
+                        value=""
+                        options={projects}
+                        required
+                        onchange={handleSelectProject}></lightning-combobox>
+            </lightning-layout-item>
+
+            <template if:true={showStep}>
+                <lightning-layout-item padding="around-medium" size="6">
+                    <lightning-combobox
+                            name="Select action"
+                            label="What do you want to do with unselected allocations?"
+                            value=""
+                            options={actions}
+                            onchange={handleSelectAction}
+                            required></lightning-combobox>
+                </lightning-layout-item>
+            </template>
+        </lightning-layout>
+
+        <div class="slds-box_border">
+            <lightning-card title='Select allocations to transfer' icon-name="utility:touch_action">
+                <template if:true={allocations}>
+
+                    <lightning-datatable key-field="table"
+                                         data={allocations}
+                                         columns={columns}
+                                         onrowselection={handleSelectRow}>
+                    </lightning-datatable>
+
+                </template>
+
+                <template if:false={allocations}>
+                    <p> No items to display. </p>
+                </template>
+
+            </lightning-card>
+        </div>
+
+        <template if:true={showButton}>
+            <div class="slds-align--absolute-center">
+                <lightning-button variant="brand"
+                                  label="Transfer Allocations"
+                                  class="slds-m-top_xx-small"
+                                  onclick={transferAllocations}>
+                </lightning-button>
+            </div>
+        </template>
+
+    </lightning-card>
+</template>

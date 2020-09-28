@@ -1,0 +1,174 @@
+<!--
+ - @author: pz
+ - @created: 04.04.2019
+ - @version: 0.1
+ -->
+
+<aura:component
+        description="CV generator"
+        implements="lightning:actionOverride,force:lightningQuickAction,force:hasRecordId"
+        controller="CVGeneratorController"
+>
+    <!-- Attributes -->
+    <aura:attribute name="lds" type="SObject[]" default="[]"/>
+    <aura:attribute name="columns" type="List"/>
+
+    <aura:attribute name="overlayPanel" type="Aura.Component[]" />
+    <aura:attribute name="searchTerm" type="String" />
+    <aura:attribute name="createFlow" type="String" default="Enrollment_Form_Caregiver"/>
+    <aura:attribute name="timer" type="Integer" />
+
+    <aura:attribute name="sels" type="List" default="[]"/>
+    <aura:attribute name="pageNumber" type="Integer" default="1"/>
+    <aura:attribute name="pageSize" type="Integer" default="10"/>
+    <aura:attribute name="total" type="Integer" default="0"/>
+
+    <aura:attribute name="wStep" type="Integer" default="0"/>
+    <aura:attribute name="spec" type="String" />
+    <aura:attribute name="isDownload" type="Boolean" default="false"/>
+    <aura:attribute name="specs" type="Object[]" />
+    <aura:attribute name="iFrameURL" type="String" default="/apex/CVTemplate"/>
+
+    <!-- Libraries -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+
+    <!-- Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- Markup -->
+    <c:request aura:id="request" context="{!this}">
+        <aura:if isTrue="{! v.wStep == 0}">
+
+
+        <lightning:card>
+            <aura:set attribute="title">
+                <div class="slds-grid">
+                    <div>
+                        <lightning:icon iconName="custom:custom63" size="large"/>
+                    </div>
+                    <div class="slds-col slds-col_bump-left" style="padding-left:10px;">
+                        <div class="slds-media__body slds-align-middle">
+                            <nav role="navigation" aria-label="Breadcrumbs">
+                                <ol class="slds-breadcrumb slds-list--horizontal">
+                                    <li class="slds-breadcrumb__item slds-line-height--reset">
+                                        <span class="uiOutputText forceBreadCrumbItem slds-text-body--small" data-aura-class="uiOutputText forceBreadCrumbItem">Related Projects</span>
+                                    </li>
+                                </ol>
+                            </nav>
+                            Projects
+                        </div>
+                    </div>
+                </div>
+            </aura:set>
+            <aura:set attribute="actions">
+                <lightning:layout horizontalAlign="end" verticalAlign="end">
+                    <lightning:layoutItem size="6" class="align-left">
+                        <lightning:input
+                                type="search"
+                                placeholder="Search this list..."
+                                value="{!v.searchTerm}"
+                                onchange="{!c.searchRecords}"
+                        />
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="4" class="align-right">
+                        <lightning:select name="specs" label="Specialization" aura:id="spec" value="{!v.spec}">
+                            <aura:iteration items="{!v.specs}" var="spec">
+                                <option text="{!spec.label}" value="{!spec.value}" selected="{!spec.selected}"></option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="2" class="align-right">
+                        <lightning:buttonGroup>
+                            <lightning:buttonIcon iconName="utility:refresh"  alternativeText="Refresh" onclick="{!c.doRefresh}"/>
+                        </lightning:buttonGroup>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </aura:set>
+
+            <p class="slds-p-horizontal_small">
+                <div class="slds-col slds-align-bottom">
+            <p class="slds-text-body--small" style="padding-left: 10px;">{!v.total} items • Sorted by Created Date • {!v.sels.length} selected</p>
+            {!v.sels}
+            </div>
+
+            <!-- Table -->
+            <lightning:datatable
+                    aura:id = "pTable"
+                    columns="{! v.columns }"
+                    data="{! v.lds }"
+                    keyField="id"
+                    onrowaction="{! c.handleRowAction }"
+                    onrowselection="{! c.updateSelected }"
+                    hideCheckboxColumn="false"
+
+            />
+
+            <aura:if isTrue="{!v.lds.length &lt; 1}">
+                <!-- NO RECORDS -->
+                <div class="parent">
+                    <div class="child">
+                        <p>No items to display</p>
+                    </div>
+                </div>
+                <aura:set attribute="else">
+                    <!-- Pagination -->
+                    <div class="slds-clearfix">
+                        <div class="slds-page-header" role="banner">
+                            <div class="slds-float_right">
+                                <lightning:buttonGroup>
+                                <lightning:button label="Prev" iconName="utility:chevronleft" iconPosition="left"
+                                                  onclick="{!c.handlePrev}" disabled="{! v.pageNumber == 1}"/>
+                                <lightning:button label="Next" iconName="utility:chevronright" iconPosition="right"
+                                                  disabled="{! not( ((v.pageNumber-1)*v.pageSize+v.lds.length) &lt; v.total )}" onclick="{!c.handleNext}"/>
+                                </lightning:buttonGroup>
+
+                                <lightning:buttonMenu alternativeText="Show menu" label="Generate CV" menuAlignment="bottom-center" class="slds-button_last" onselect="{! c.genCV }">
+                                    <lightning:menuItem label="Generate PDF" value="pdf" />
+                                    <lightning:menuItem label="Generate DOC" value="msword" />
+                                    <lightning:menuItem label="Generate VF" value="vf" />
+                                </lightning:buttonMenu>
+
+                            </div>
+                            <p class="">Page {!v.pageNumber} | Showing records from {! ((v.pageNumber-1)*v.pageSize)+' to '+((v.pageNumber-1)*v.pageSize+v.lds.length)} out of {!v.total}</p>
+                        </div>
+                    </div>
+                </aura:set>
+            </aura:if>
+            </p>
+        </lightning:card>
+            <aura:set attribute="else">
+                <aura:if isTrue="{!v.isDownload}">
+                    <div class="" style="height: 4rem;">
+                        <div class="slds-notify_container slds-is-relative">
+                            <div class="slds-notify slds-notify_toast slds-theme_warning" role="status">
+                                <span class="slds-assistive-text">warning</span>
+                                <span class="slds-icon_container slds-icon-utility-warning slds-m-right_small slds-no-flex slds-align-top" title="Warning">
+                        <lightning:icon iconName="utility:warning" alternativeText="Warning!" />
+                      </span>
+                                <div class="slds-notify__content">
+                                    <h2 class="slds-text-heading_small ">Download should have begun. <a href="javascript:void(0)" onclick="{!c.reloadFrame}">Press here to relaunch.</a></h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+
+                <iframe id="frm" src="{! v.iFrameURL }" width="100%" height="450px;" frameBorder="0"></iframe>
+            </aura:set>
+        </aura:if>
+    </c:request>
+
+
+<!--
+    <aura:html tag="style">
+        .slds-modal__content{
+        position: relative;
+
+        }
+        .slds-spinner_container{
+        min-height:900px;
+        }
+    </aura:html>
+-->
+</aura:component>

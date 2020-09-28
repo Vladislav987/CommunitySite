@@ -1,0 +1,28 @@
+<!--
+ - @author: sh
+ - @created: 19.03.2019
+ - @version: 0.1
+ -->
+
+<aura:component extensible="true">
+    <aura:attribute name="context" type="Object" required="true"/>
+    <aura:attribute name="spinnerSize" type="String" required="true" default="medium"/>
+    <aura:attribute name="spinnerVariant" type="String" required="true" default="brand"/>
+    <aura:attribute name="spinnerAlternativeText" type="String"/>
+    <aura:attribute name="spinnerClass" type="String"/>
+    <aura:attribute name="isSpinnerEnabled" type="Boolean" default="false"/>
+
+
+    <aura:method name="enqueue" action="{!c.request}">
+        <aura:attribute name="actionName" type="String" description="backend controller method name"/>
+        <aura:attribute name="params" type="Object" description="Parameters passed to backend controller method"/>
+        <aura:attribute name="isBackground" type="Boolean" default="false"/>
+    </aura:method>
+
+    <div>
+        {!v.body}
+        <aura:if isTrue="{!v.isSpinnerEnabled}">
+            <lightning:spinner size="medium" variant="brand" alternativeText="" class=""/>
+        </aura:if>
+    </div> 
+</aura:component>

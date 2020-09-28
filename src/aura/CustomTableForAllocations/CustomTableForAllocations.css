@@ -1,0 +1,7 @@
+.THIS .customIcon div{
+    bottom: 10px;
+}
+
+.THIS.customIcon div{
+    bottom: 10px;
+}

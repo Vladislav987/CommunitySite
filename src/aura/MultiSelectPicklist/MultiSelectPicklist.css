@@ -1,0 +1,10 @@
+/**
+ * Created by MaxymMirona on 24.04.2020.
+ */
+
+.THIS .slds-pill_container {
+    max-height: 130px;
+    height: auto;
+    border: none;
+    padding-left: 0;
+}

@@ -1,0 +1,95 @@
+<!--
+ - Created by IlliaLuhovyi on 4/16/2020.
+ -->
+
+<!-- Reimbursements Component -->
+<template>
+    <lightning-card>
+        <template if:true={isLoaderShown}>
+            <lightning-spinner alternative-text={constants.SPINNER_LABEL} size="large"></lightning-spinner>
+        </template>
+        <lightning-layout>
+            <lightning-layout-item padding="around-small">
+                <lightning-radio-group
+                        name="filter_projects_group"
+                        label={constants.RADIO_GROUP_LABEL}
+                        options={filter_projects_options}
+                        value={filter_projects_value}
+                        onchange={onFilterChange}>
+                </lightning-radio-group>
+                <div class="slds-has-divider_bottom"></div>
+                <div class="slds-text-title_bold">{constants.PROJECTS_LABEL}</div>
+                <lightning-accordion>
+                    <template for:each={projects} for:item="project">
+                        <lightning-accordion-section key={project.Id} name={project.Name} label={project.Name}>
+                            <lightning-accordion>
+                                <template if:false={project.travelArray.length}>
+                                    <span>{constants.EMPTY_TRAVEL_REQUEST_LABEL}</span>
+                                </template>
+                                <template if:true={project.travelArray.length}>
+                                    <template for:each={project.travelArray} for:item="travel">
+                                        <lightning-accordion-section key={travel.Id} name={travel.Id} label={travel.label}>
+                                            <lightning-button-icon
+                                                    slot="actions"
+                                                    icon-name="utility:add"
+                                                    alternative-text={constants.ADD_BTN_LABEL}
+                                                    variant="container"
+                                                    name={project.Id}
+                                                    class="slds-m-left_xx-small"
+                                                    title={constants.ADD_BTN_LABEL}
+                                                    onclick={openSubmitModal}
+                                            >
+                                            </lightning-button-icon>
+                                            <div class="payroll-section">
+                                                <table>
+                                                    <thead>
+                                                    <tr class="table100-head">
+                                                        <th>{constants.TABLE_TH_SUM}</th>
+                                                        <th>{constants.TABLE_TH_STATUS}</th>
+                                                        <th>{constants.TABLE_TH_PM}</th>
+                                                        <th>{constants.TABLE_TH_SALARY_DATE}</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <template for:each={travel.payrollComponentArray} for:item="payroll">
+                                                        <tr key={payroll.Id}>
+                                                            <td>{payroll.Sum} {payroll.CurrencyCode}</td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    {payroll.Status}
+                                                                    <template if:true={payroll.rejectionReason}>
+                                                                        <lightning-helptext class="slds-m-left_small slds-m-bottom_xx-small" content={payroll.rejectionReason}></lightning-helptext>
+                                                                    </template>
+                                                                </div>
+                                                            </td>
+                                                            <td>{payroll.projectManager}</td>
+                                                            <td>
+                                                                <template if:true={payroll.salaryDate}>
+                                                                    {payroll.salaryDate}
+                                                                </template>
+                                                            </td>
+                                                            <td>
+                                                                <template if:true={payroll.isEditable}>
+                                                                    <span class="pointer" data-id={payroll.Id} data-project={project.Id} onclick={openEditModal}>{constants.TABLE_TD_EDIT}</span>
+                                                                </template>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </lightning-accordion-section>
+                                    </template>
+                                </template>
+                            </lightning-accordion>
+                        </lightning-accordion-section>
+                    </template>
+                </lightning-accordion>
+            </lightning-layout-item>
+        </lightning-layout>
+
+        <c-reimbursements-component-edit-modal onsubmit={onEditModalSubmit} curr-options={currOptions}></c-reimbursements-component-edit-modal>
+        <c-reimbursements-component-submit-modal onsubmit={onSubmitModal} curr-options={currOptions}></c-reimbursements-component-submit-modal>
+    </lightning-card>
+</template>

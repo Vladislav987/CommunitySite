@@ -1,0 +1,18 @@
+<!--
+ - Created by MaxymMirona on 19.06.2020.
+ -->
+
+<aura:component description="GenerateInvoiceGeneralComponent" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <lightning:layout horizontalAlign="space" verticalAlign="center" class="general-layout">
+        <lightning:layoutItem>
+            <lightning:button label="Generate Invoice" variant="brand" onclick="{!c.onGenerateInvoice}" />
+        </lightning:layoutItem>
+        <lightning:layoutItem>
+            <lightning:button label="Generate Accrual" variant="brand" onclick="{!c.onGenerateAccrual}" />
+        </lightning:layoutItem>
+    </lightning:layout>
+
+</aura:component>

@@ -1,0 +1,17 @@
+/**
+ * Created by MaxymMirona on 17.12.2019.
+ */
+
+.THIS #related_list{
+    height:auto;
+    max-height: 360px;
+}
+.THIS #related_list_empty_message{
+    height: 160px;
+}
+.THIS #view_all_link{
+    cursor: pointer;
+}
+.THIS .slds-icon_container{
+    background-color: #48c7c8;
+}

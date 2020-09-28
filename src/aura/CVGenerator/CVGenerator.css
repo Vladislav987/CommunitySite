@@ -1,0 +1,25 @@
+/**
+ * Created by pz on 2019-04-04.
+ */
+.THIS {
+}
+.THIS .slds-modal__content{
+    position: relative;
+}
+.THIS .align-left{
+    text-align:left;
+}
+.THIS .align-right{
+    text-align:right;
+}
+.THIS .parent {
+    width: 100%;
+    height: 100%;
+    display: table;
+    text-align: center;
+    min-height: 150px;
+}
+.THIS .parent > .child {
+    display: table-cell;
+    vertical-align: middle;
+}

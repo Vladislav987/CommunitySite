@@ -1,0 +1,64 @@
+/**
+ * Created by Lambru Dmytro on 19.03.2020.
+ */
+
+.THIS.uab_accordion {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    background: transparent;
+    background-clip: border-box;
+    border-radius: .25rem;
+    border: 1px solid #dddbda;
+    line-height: var(--lwc-lineHeightButton,1.875rem);
+    text-decoration: none;
+    -webkit-appearance: none;
+    white-space: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    width: 100%;
+    outline: none;
+    transition: background 0.4s;
+}
+
+.THIS.uab_accordion:hover {
+    background: var(--lwc-colorBackgroundButtonDefaultActive, rgb(238, 241, 246));
+}
+
+.THIS.uab_accordion.uab_active {
+    border-radius: .25rem .25rem 0 0;
+    border-bottom: none;
+}
+
+.THIS.uab_accordion::before {
+    content: '\25B6';
+    color: #777;
+    float: left;
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+    transition: transform 0.3s ease-in-out;
+}
+
+.THIS.uab_active::before {
+    transform:rotate(90deg);
+}
+
+.THIS.uab_panel {
+    visibility: hidden;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+.THIS.uab_panel.uab_active {
+    visibility: visible;
+    border-left: 1px solid #dddbda;
+    border-right: 1px solid #dddbda;
+    border-bottom: 1px solid #dddbda;
+    border-radius: 0 0 .25rem .25rem;
+}

@@ -1,0 +1,107 @@
+<!--
+ - Created by Ponomarov Vladyslav on 10.06.2020.
+ -->
+
+<!-- Salary Component -->
+<template>
+    <template if:true={value}>
+        <article class="slds-card">
+            <div class="slds-card__header slds-grid slds-border_bottom">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                    <div class="slds-media__figure">
+                        <lightning-icon icon-name="standard:client" size="small"></lightning-icon>
+                    </div>
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <span class="slds-text-title_bold">Salary Data</span>
+                        </h2>
+                    </div>
+                </header>
+            </div>
+            <template if:true={value.salary}>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-m-horizontal_small slds-border_bottom slds-p-bottom_xx-small">
+                        <span>Salary : USD&nbsp;</span>
+                        <lightning-formatted-number value={value.salary}
+                                                    format-style="decimal"
+                                                    maximum-fraction-digits="2">
+
+                        </lightning-formatted-number>
+                    </div>
+                </div>
+            </template>
+            <template if:true={value.hourlyRate}>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-m-horizontal_small slds-border_bottom slds-p-bottom_xx-small">
+                        <span>Hourly rate : USD&nbsp;</span>
+                        <lightning-formatted-number value={value.hourlyRate}
+                                                    minimum-fraction-digits="2"
+                                                    maximum-fraction-digits="2">
+                        </lightning-formatted-number>
+                    </div>
+                </div>
+            </template>
+            <template if:true={value.hourlyCost}>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-m-horizontal_small slds-border_bottom slds-p-bottom_xx-small">
+                        <span>Hourly cost : USD&nbsp;</span>
+                        <lightning-formatted-number value={value.hourlyCost}
+                                                    minimum-fraction-digits="2"
+                                                    maximum-fraction-digits="2">
+                        </lightning-formatted-number>
+                    </div>
+                </div>
+            </template>
+            <template if:true={value.companyCost}>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-m-horizontal_small slds-border_bottom slds-p-bottom_xx-small">
+                        <span>Company cost : USD&nbsp;</span>
+                        <lightning-formatted-number value={value.companyCost}
+                                                    minimum-fraction-digits="2"
+                                                    maximum-fraction-digits="2">
+
+                        </lightning-formatted-number>
+                    </div>
+                </div>
+            </template>
+            <template if:true={value.companyCostWithOverhead}>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-m-horizontal_small slds-border_bottom slds-p-bottom_xx-small">
+                        <span>Company cost with overhead : USD&nbsp;</span>
+                        <lightning-formatted-number value={value.companyCostWithOverhead}
+                                                    minimum-fraction-digits="2"
+                                                    maximum-fraction-digits="2">
+
+                        </lightning-formatted-number>
+                    </div>
+                </div>
+            </template>
+            <template if:true={value.companyCostWithoutOverhead}>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="slds-m-horizontal_small slds-border_bottom slds-p-bottom_xx-small">
+                        <span>Company cost without overhead : USD&nbsp;</span>
+                        <lightning-formatted-number value={value.companyCostWithoutOverhead}
+                                                    minimum-fraction-digits="2"
+                                                    maximum-fraction-digits="2">
+
+                        </lightning-formatted-number>
+                    </div>
+                </div>
+            </template>
+        </article>
+    </template>
+    <template if:true={showTable}>
+        <div class="inner-block">
+            <div style="height: 160px;">
+                <lightning-datatable key-field="table"
+                                     data={value.recordsList}
+                                     columns={columns}
+                                     hide-checkbox-column
+
+                >
+                </lightning-datatable>
+            </div>
+
+        </div>
+    </template>
+</template>

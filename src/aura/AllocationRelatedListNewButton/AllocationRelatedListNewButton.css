@@ -1,0 +1,14 @@
+/**
+ * Created by MaxymMirona on 10.01.2020.
+ */
+
+.THIS legend{
+    padding-bottom: 1.5rem;
+    font-weight: 400;
+}
+.THIS .slds-radio{
+    padding-bottom: 1rem;
+}
+.THIS .slds-form-element__label{
+    padding-left: 2rem;
+}

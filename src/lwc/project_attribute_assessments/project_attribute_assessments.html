@@ -1,0 +1,59 @@
+<!--
+ - Created by VasylKhrystynych on 5/19/2020.
+ -->
+
+<!-- Project Attribute Assessments -->
+<template>
+    <lightning-card title={title} icon-name={cardIconName}>
+        <div slot="actions">
+            <lightning-button label="New"
+                              title="New"
+                              onclick={handleCreateNewRecord}
+                              class="slds-m-left_x-small">
+
+            </lightning-button>
+        </div>
+        <lightning-layout horizontal-align='center' vertical-align='end'>
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <lightning-combobox
+                        name="status"
+                        label="Status"
+                        value={selectedStatus}
+                        options={statuses}
+                        onchange={handleStatusFilterChange}></lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item flexibility="auto" padding="around-small">
+                <lightning-button label="Search"
+                                  title="Search"
+                                  variant="brand"
+                                  onclick={handleFilterAssessment}
+                                  class="slds-m-top_xx-small">
+
+                </lightning-button>
+            </lightning-layout-item>
+        </lightning-layout>
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-align_absolute-center">
+                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+            </div>
+        </template>
+        <template if:false={isLoading}>
+            <template if:true={isNotEmptyList}>
+                <div class="slds-scrollable_y related_list ">
+                    <c-datatable_extended key-field="id"
+                                          is-loading={isLoading}
+                                          data={filteredRecords}
+                                          columns={columns}
+                                          hide-checkbox-column
+                                          show-row-number-column
+                                          onrowaction={handleRowAction}></c-datatable_extended>
+                </div>
+            </template>
+            <template if:false={isNotEmptyList}>
+                <div class="slds-scrollable_y slds-align_absolute-center related_list_empty_message">
+                    <p> No items to display. </p>
+                </div>
+            </template>
+        </template>
+    </lightning-card>
+</template>

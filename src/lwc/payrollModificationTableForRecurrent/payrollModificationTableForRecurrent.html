@@ -1,0 +1,183 @@
+<template>
+    <lightning-button data-id="deactivateBtn"
+                      class="slds-p-around_small slds-float_right deactivate-btn-p"
+                      variant="destructive"
+                      label={DEACTIVATE}
+                      onclick={openModal}
+                      disabled
+    >
+    </lightning-button>
+
+    <template if:true={sortedRecurrentPayslips}>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+            <thead>
+            <tr class="slds-line-height_reset">
+                <th scope="col" class="checkbox-column-size">
+                    <div class="slds-align_absolute-center">
+                        <lightning-input
+                                type="checkbox"
+                                label=""
+                                variant="label-hidden"
+                                onchange={allSelected}
+                        >
+                        </lightning-input>
+                    </div>
+                </th>
+                <template for:each={sortedRecurrentPayslips.payslipColumnsWrappers} for:item="columnForTable">
+                    <th scope="col" key={columnForTable.name}>
+                        <div class="slds-align_absolute-center slds-truncate" data-key={columnForTable.name} data-index={columnForTable.isAsc} onclick={sortColumn}>
+                            {columnForTable.name}
+                            <div if:true={columnForTable.isSortable}>
+                                <div if:true={columnForTable.isAsc}>
+                                    &#9650;
+                                </div>
+                                <div if:false={columnForTable.isAsc}>
+                                    &#9660;
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                </template>
+            </tr>
+            </thead>
+            <tbody>
+            <template for:each={currentPagePayslips} for:item="payslipWrapper">
+                <tr key={payslipWrapper.Id}>
+                    <th scope="col" class="checkbox-column-size">
+                        <div class="slds-align_absolute-center">
+                            <template if:false={payslipWrapper.isDeactivated}>
+                                <lightning-input data-id="payslip-checkbox"
+                                                 type="checkbox"
+                                                 label=""
+                                                 variant="label-hidden"
+                                                 value={payslipWrapper.Id}
+                                                 onchange={onSelect}
+                                >
+                                </lightning-input>
+                            </template>
+                            <template if:true={payslipWrapper.isDeactivated}>
+                                <lightning-input type="checkbox"
+                                                 label=""
+                                                 variant="label-hidden"
+                                                 disabled
+                                >
+                                </lightning-input>
+                            </template>
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">{payslipWrapper.name}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center"><lightning-formatted-number value={payslipWrapper.Sum}
+                                                                                            format-style="currency"
+                                                                                            currency-display-as="code"
+                                                                                            currency-code={payslipWrapper.currencyIsoCode}></lightning-formatted-number>
+                        </div>
+                    </th>
+                    <template if:true={showInsuranceTypeData}>
+                        <th scope="col">
+                            <div class="slds-align_absolute-center">
+                                <div class="reason-overflow" title={payslipWrapper.insurance}>{payslipWrapper.insurance}</div>
+                            </div>
+                        </th>
+                    </template>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">
+                            <div class="reason-overflow" title={payslipWrapper.reason}>{payslipWrapper.reason}</div>
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">{payslipWrapper.startDate}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">{payslipWrapper.endDate}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">{payslipWrapper.status}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">{payslipWrapper.createdByName}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-align_absolute-center">
+                            <lightning-button label={DETAIL} onclick={onDetail}
+                                              data-record-id={payslipWrapper.Id}
+                                              data-is-read-only-mode={payslipWrapper.isDeactivated}>
+                            </lightning-button>
+                        </div>
+                    </th>
+                </tr>
+            </template>
+            </tbody>
+        </table>
+        <template if:true= {currentPagePayslips}>
+            <div class="container">
+                <div class="left">
+                    <template if:true={hasPreviousPage}>
+                        <lightning-button-icon
+                                icon-name="utility:left"
+                                variant="border-filled"
+                                onclick={handlePagePrevious}
+                        ></lightning-button-icon>
+                    </template>
+                </div>
+                <div class="centered">
+                    {total}&nbsp;{label} • page {page} of {pages}
+                </div>
+                <div class="right">
+                    <template if:true={hasMorePages}>
+                        <lightning-button-icon
+                                icon-name="utility:right"
+                                variant="border-filled"
+                                onclick={handlePageNext}>
+                        </lightning-button-icon>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </template>
+
+    <template if:false={sortedRecurrentPayslips.payslipWrappers}>
+        <div class="slds-grid slds-wrap slds-m-vertical_medium slds-text-title_caps slds-text-heading_large">
+            <div class="slds-grid slds-size_1-of-1 slds-align-content-center slds-m-top_large">
+                {errorMessage}
+            </div>
+        </div>
+    </template>
+
+    <template if:true={isModalOpen}>
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title={CLOSE} onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                                        alternative-text="close"
+                                        variant="inverse"
+                                        size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">{CLOSE}</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{QUESTION_MODAL_PART_1} {checkedAmount} {QUESTION_MODAL_PART_2}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p><b>{SENTENCE_MODAL} <br /> {NOTE_MODAL}</b></p>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal}>{CANCEL}</button>
+                    <button class="slds-button slds-button_brand" onclick={deactivatePayslips}>{DEACTIVATE}</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <c-modify-payroll-component if:true={showComponent}
+                                onsaved={onSavedModifyCmp}
+                                onclose={onCloseModifyCmp}
+                                pay-roll-cmp-config={payRollCmpConfig}
+                                record-id-payroll={recordIdPayroll}
+                                is-read-only-mode={isReadOnlyMode}
+                                is-recurrent
+    >
+    </c-modify-payroll-component>
+</template>

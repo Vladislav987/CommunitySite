@@ -1,0 +1,35 @@
+/**
+ * Created by Yauheniy Malakhoiskiy on 24-Apr-20.
+ */
+
+
+.THIS .Button1{
+    border-color: gray;
+    border-width: 1px;
+    color: white;
+    background-color: slategray;
+    margin: 4px;
+}
+
+.THIS .Button1:disabled{
+    border-color: gray;
+    border-width: 1px;
+    color: white;
+    background-color: #387bce;
+    margin: 4px;
+}
+.THIS .Button2{
+    border-color: gray;
+    border-width: 1px;
+    color: white;
+    background-color: slategray;
+    margin: 4px;
+}
+
+.THIS .Button2:disabled{
+    border-color: gray;
+    border-width: 1px;
+    color: white;
+    background-color: #387bce;
+    margin: 4px;
+}
