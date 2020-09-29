@@ -1,0 +1,33 @@
+<!--
+ - Created by Ponomarov Vladyslav on 16.09.2020.
+ -->
+
+<!-- Custom Table Without Header -->
+<template>
+    <template if:true={allocation}>
+        <div class="slds-scrollable">
+            <table class="slds-table slds-table_bordered slds-table_fixed-layout" role="grid">
+                <tbody>
+                <tr>
+                    <template for:each={values} for:item="value">
+                        <td key={value.label} class="slds-text-align_center">
+                            <template if:true={value.isLink}>
+                                <a onclick={navigateToRecord}>
+                                    {value.value}
+                                </a>
+                            </template>
+                            <template if:false={value.isLink}>
+                                {value.value}
+                            </template>
+                        </td>
+                    </template>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </template>
+    <template if:false={allocation}>
+        {constants.NO_ALLOCATION_PROJECT_FOUND}
+    </template>
+
+</template>

@@ -1,0 +1,115 @@
+<!--
+ - Created by Ponomarov Vladyslav on 16.09.2020.
+ -->
+
+<!-- Related Allocation For Grouping Project -->
+<template>
+    <div>
+        <lightning-card title="Allocations from child projects" icon-name="custom:custom2">
+            <template if:true={showData}>
+                <div>
+                    <lightning-layout horizontal-align="center">
+                        <lightning-layout-item padding="around-small" size="2">
+                            <lightning-combobox
+                                    name="project"
+                                    label="Team"
+                                    value={teams}
+                                    placeholder="All"
+                                    onchange={handleChangeProject}
+                                    options={teamsOption}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="2">
+                            <lightning-combobox
+                                    name="status"
+                                    label="Status"
+                                    placeholder="All"
+                                    onchange={handleChangeStatus}
+                                    value={statuses}
+                                    options={statusesOption}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="2">
+                            <lightning-combobox
+                                    name="type"
+                                    label="Type"
+                                    placeholder="All"
+                                    onchange={handleChangeType}
+                                    value={types}
+                                    options={typesOption}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="2">
+                            <lightning-combobox
+                                    name="contractor"
+                                    label="Contractor"
+                                    placeholder="All"
+                                    onchange={handleChangeContractor}
+                                    value={contractors}
+                                    options={contractorsOption}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item padding="around-small" size="1">
+                            <div class="slds-p-top_medium">
+                                <lightning-button variant="brand"
+                                                  label="Search"
+                                                  onclick={filterAllocations}
+                                >
+
+                                </lightning-button>
+                            </div>
+
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <div>
+                    <table class="slds-table slds-table_bordered slds-table_fixed-layout ckl" role="grid">
+                        <thead>
+                        <tr>
+                            <template for:each={columns} for:item="column">
+                                <th scope="col" title={column} key={column} class="slds-border_right">
+                                    <a onclick={sortColumn} data-id={column} key={column} aria-label={column}>
+                                        <div class="slds-align_absolute-center slds-form-element slds-has-flexi-truncate">
+                                            <span class="slds-truncate">{column}</span>
+                                        </div>
+                                    </a>
+                                </th>
+                            </template>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="slds-p-around_xx-small">
+                    <template for:each={childProjects} for:item="project">
+                        <lightning-accordion allow-multiple-sections-open key={project.Id}>
+                            <div class="slds-box_border slds-m-top_xx-small" key={project.Id}>
+                                <lightning-accordion-section name={project.Name} label={project.Name} key={project.Id}>
+                                    <article class="slds-card" key={project.Id}>
+                                        <div class="slds-card__body slds-card__body_inner">
+                                            <template for:each={project.Allocations__r} for:item="row">
+                                                <c-custom-table-without-header allocation={row}
+                                                                               fields-api-name={fieldsApiName}
+
+                                                                               key={row.Id}></c-custom-table-without-header>
+                                            </template>
+                                            <template if:false={project.Allocations__r}>
+                                                <div class="slds-text-align_center">
+                                                    {constants.NO_ALLOCATION_PROJECT_FOUND}
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </article>
+                                </lightning-accordion-section>
+                            </div>
+                        </lightning-accordion>
+                    </template>
+                </div>
+            </template>
+            <template if:false={showData}>
+                <div class="slds-text-align_center">
+                    {constants.NO_CHILD_PROJECT_FOUND}
+                </div>
+            </template>
+        </lightning-card>
+    </div>
+</template>
